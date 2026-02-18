@@ -5,12 +5,11 @@
 ```
 DSQuant/
 ├── src/                      # Source code
-│   ├── core/                 # Core library
-│   │   ├── include/          # Public headers
-│   │   │   └── dsquant/
-│   │   │       └── core/
-│   │   ├── tests/            # Unit tests
-│   │   └── benchmarks/       # Performance benchmarks
+│   ├── lib/                  # Library
+│   │   └── include/
+│   │       └── dsquant/
+│   ├── tests/                # Unit tests
+│   ├── benchmarks/           # Performance benchmarks
 │   └── examples/             # Example applications
 ├── docs/                     # Documentation
 ├── build/                    # Build output (generated)
@@ -28,10 +27,10 @@ DSQuant follows strict TDD principles:
 
 Create a test file in the appropriate `tests/` directory:
 
-**src/core/tests/test_new_feature.cpp:**
+**src/tests/test_new_feature.cpp:**
 ```cpp
 #include <boost/ut.hpp>
-#include <dsquant/core/new_feature.hpp>
+#include <dsquant/new_feature.hpp>
 
 int main() {
     using namespace boost::ut;
@@ -62,7 +61,7 @@ cd build && ctest --output-on-failure
 
 Create the implementation in `include/`:
 
-**src/core/include/dsquant/core/new_feature.hpp:**
+**src/lib/include/dsquant/new_feature.hpp:**
 ```cpp
 #pragma once
 
@@ -91,7 +90,7 @@ Improve the code while keeping tests green.
 ### Step 1: Create Directory Structure
 
 ```bash
-mkdir -p src/newcomponent/{include/dsquant/newcomponent,test,benchmarks}
+mkdir -p src/newcomponent/{include/dsquant/newcomponent,tests,benchmarks}
 ```
 
 ### Step 2: Create CMakeLists.txt
@@ -121,7 +120,7 @@ endif()
 
 Update **src/CMakeLists.txt:**
 ```cmake
-add_subdirectory(core)
+add_subdirectory(lib)
 add_subdirectory(newcomponent)  # Add this line
 add_subdirectory(examples)
 ```
@@ -253,7 +252,7 @@ struct TestFixture {
 
 ```cpp
 #include <nanobench.h>
-#include <dsquant/core/feature.hpp>
+#include <dsquant/feature.hpp>
 
 int main() {
     ankerl::nanobench::Bench().run("feature name", [&] {
@@ -389,7 +388,7 @@ FetchContent_MakeAvailable(newdep)
 
 **src/examples/new_example.cpp:**
 ```cpp
-#include <dsquant/core/feature.hpp>
+#include <dsquant/feature.hpp>
 #include <iostream>
 
 int main() {

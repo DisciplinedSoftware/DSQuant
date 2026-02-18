@@ -17,10 +17,11 @@ DSQuant is a modern C++23 library for quantitative finance, built with test-driv
 ```
 DSQuant/
 ├── src/
-│   ├── core/              # Core library
-│   │   ├── include/       # Public headers
-│   │   ├── tests/         # Unit tests
-│   │   └── benchmarks/    # Performance benchmarks
+│   ├── lib/               # Core library
+│   │   └── include/
+│   │       └── dsquant/
+│   ├── tests/             # Unit tests
+│   ├── benchmarks/        # Performance benchmarks
 │   └── examples/          # Example applications
 ├── build/                 # Build directory (generated)
 │   ├── bin/              # Compiled executables
@@ -98,16 +99,16 @@ Dependencies are automatically fetched during configuration:
 
 ## Development
 This project follows TDD principles:
-1. Write tests first in the appropriate `tests/` directory
-2. Implement functionality in `include/` directory
-3. Add benchmarks in `benchmarks/` directory if needed
+1. Write tests first in the `src/tests/` directory
+2. Implement functionality in `src/lib/include/` directory
+3. Add benchmarks in `src/benchmarks/` directory if needed
 4. Verify with `ctest` and performance with benchmark executables
 
 ## Contributing
 Each library component should have:
-- Public headers in `include/dsquant/<component>/`
-- Unit tests in `tests/`
-- Benchmarks in `benchmarks/`
+- Public headers in `src/lib/include/dsquant/`
+- Unit tests in `src/tests/`
+- Benchmarks in `src/benchmarks/`
 - CMakeLists.txt for build configuration
 
 ## License

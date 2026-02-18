@@ -57,10 +57,12 @@ cd build && ctest --output-on-failure
 
 ```
 DSQuant/
-├── src/core/              # Core library
-│   ├── include/           # Public headers
+├── src/
+│   ├── lib/               # Core library
+│   │   └── include/dsquant/
 │   ├── tests/             # Unit tests
-│   └── benchmarks/        # Benchmarks
+│   ├── benchmarks/        # Benchmarks
+│   └── examples/          # Example applications
 ├── build/                 # Build output
 │   ├── bin/               # Executables
 │   └── lib/               # Libraries
@@ -80,7 +82,7 @@ DSQuant/
 ### Test File
 ```cpp
 #include <boost/ut.hpp>
-#include <dsquant/core/feature.hpp>
+#include <dsquant/feature.hpp>
 
 int main() {
     using namespace boost::ut;
@@ -110,7 +112,7 @@ constexpr T function(T value) noexcept {
 ### Benchmark File
 ```cpp
 #include <nanobench.h>
-#include <dsquant/core/feature.hpp>
+#include <dsquant/feature.hpp>
 
 int main() {
     ankerl::nanobench::Bench().run("feature", [&] {
@@ -160,7 +162,7 @@ int main() {
 - Use `./build.sh --clean` for fresh builds
 - Run tests after every change
 - Add benchmarks for performance-critical code
-- Keep headers in `include/dsquant/`
+- Keep headers in `src/lib/include/dsquant/`
 - Follow TDD: Test → Implement → Refactor
 
 ## Getting Help
@@ -175,22 +177,22 @@ ctest --help               # Testing options
 
 ```bash
 # 1. Create new feature test
-vim src/core/tests/test_newfeature.cpp
+vim src/tests/test_newfeature.cpp
 
 # 2. Add to CMakeLists.txt
-vim src/core/tests/CMakeLists.txt
+vim src/tests/CMakeLists.txt
 
 # 3. Build and test (should fail)
 ./build.sh
 
 # 4. Implement feature
-vim src/core/include/dsquant/core/newfeature.hpp
+vim src/lib/include/dsquant/newfeature.hpp
 
 # 5. Build and test (should pass)
 ./build.sh
 
 # 6. Add benchmark
-vim src/core/benchmarks/benchmark_newfeature.cpp
+vim src/benchmarks/benchmark_newfeature.cpp
 
 # 7. Run benchmark
 ./build/bin/benchmark_newfeature

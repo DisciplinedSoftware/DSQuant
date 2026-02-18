@@ -37,7 +37,7 @@ DSQuant is designed to support both traditional header-based and modern C++23 mo
 
 ### Traditional Header Approach (Current)
 
-**include/dsquant/core/statistics.hpp:**
+**src/lib/include/dsquant/statistics.hpp:**
 ```cpp
 #pragma once
 
@@ -56,14 +56,14 @@ constexpr T mean(const T* begin, const T* end) noexcept {
 
 **Usage:**
 ```cpp
-#include <dsquant/core/statistics.hpp>
+#include <dsquant/statistics.hpp>
 
 double result = dsquant::mean(data, data + size);
 ```
 
 ### Module Approach (Future)
 
-**src/core/statistics.cppm:**
+**src/lib/statistics.cppm:**
 ```cpp
 export module dsquant.core.statistics;
 
@@ -162,8 +162,8 @@ add_library(dsquant_core)
 target_sources(dsquant_core
     PUBLIC
         FILE_SET CXX_MODULES FILES
-            src/core/statistics.cppm
-            src/core/options.cppm
+            src/lib/statistics.cppm
+            src/lib/options.cppm
 )
 ```
 
