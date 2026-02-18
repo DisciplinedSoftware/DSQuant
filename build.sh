@@ -130,6 +130,7 @@ print_info "  Shared Libs: $BUILD_SHARED_LIBS"
 # (needed for boost.ut). Only affects external package configuration, not our code.
 cmake -B "$BUILD_DIR" \
     -DCMAKE_POLICY_DEFAULT_CMP0175=OLD \
+    -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
     -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
     -DBUILD_TESTS="$BUILD_TESTS" \
     -DBUILD_BENCHMARKS="$BUILD_BENCHMARKS" \
