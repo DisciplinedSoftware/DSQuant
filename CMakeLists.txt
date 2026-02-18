@@ -94,17 +94,15 @@ FetchContent_Declare(
     nanobench
     GIT_REPOSITORY https://github.com/martinus/nanobench.git
     GIT_TAG v4.3.11
+    SOURCE_SUBDIR __do_not_add_subdirectory__
 )
 
 if(BUILD_BENCHMARKS)
-    FetchContent_GetProperties(nanobench)
-    if(NOT nanobench_POPULATED)
-        FetchContent_Populate(nanobench)
-    endif()
+    FetchContent_MakeAvailable(nanobench)
 
-    if(NOT TARGET nanobench)
-        add_library(nanobench INTERFACE)
-        target_include_directories(nanobench INTERFACE
+    if(NOT TARGET dsquant_nanobench)
+        add_library(dsquant_nanobench INTERFACE)
+        target_include_directories(dsquant_nanobench INTERFACE
             ${nanobench_SOURCE_DIR}/src/include
         )
     endif()
