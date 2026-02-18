@@ -42,4 +42,30 @@
 
 # Build directories
 build/
-output/
+bin/
+lib/
+out/
+cmake-build-*/
+
+# CMake files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Dependencies
+external/
+_deps/
+
+# C++ Module files
+*.pcm
+*.ifc
+*.gcm
