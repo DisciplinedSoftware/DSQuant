@@ -1,7 +1,8 @@
 #include <dsquant/statistics.hpp>
 
 int main() {
-    dsquant::foo(); // Call the function defined in statistics.cpp to ensure it's linked correctly
+    // TODO: To remove once there is at least one linker dependency is included on the library. This is just to ensure that the library is linked correctly.
+    dsquant::foo();
 
     return 0;
 }

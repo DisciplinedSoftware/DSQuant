@@ -41,6 +41,7 @@ int main() {
     std::cout << "  Volatility:         " << std::fixed << std::setprecision(2) 
               << (annualized_volatility * 100) << "%\n";
 
+    // TODO: To remove once there is at least one linker dependency is included on the library. This is just to ensure that the library is linked correctly.
     dsquant::foo(); // Call the function defined in statistics.cpp to ensure it's linked correctly
 
     return 0;

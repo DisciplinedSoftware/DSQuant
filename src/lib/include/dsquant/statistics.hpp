@@ -62,6 +62,7 @@ constexpr T standard_deviation(const T* begin, const T* end) noexcept {
     return std::sqrt(variance(begin, end));
 }
 
+// TODO: To remove once there is at least one linker dependency is included on the library. This is just to ensure that the library is linked correctly.
 void foo();
 
 } // namespace dsquant
