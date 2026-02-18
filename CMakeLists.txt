@@ -28,26 +28,38 @@ endforeach()
 # Compiler-specific flags
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     add_compile_options(-Wall -Wextra -pedantic)
-    # Enable C++23 modules support for GCC
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 14.0)
-        add_compile_options(-fmodules-ts)
-    endif()
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_compile_options(-Wall -Wextra -pedantic)
-    # Enable C++23 modules support for Clang
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 16.0)
-        add_compile_options(-fmodules)
-    endif()
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     add_compile_options(/W4 /permissive-)
-    # MSVC has built-in module support in VS2019 16.10+
-    add_compile_options(/std:c++latest)
 endif()
 
 # Options
 option(BUILD_TESTS "Build tests" ON)
 option(BUILD_BENCHMARKS "Build benchmarks" ON)
-option(BUILD_WITH_MODULES "Build with C++20 modules" OFF)
+option(BUILD_WITH_MODULES "Build with C++23 modules" OFF)
+
+# Apply module-specific compiler flags when enabled
+if(BUILD_WITH_MODULES)
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+        # Enable C++23 modules support for GCC
+        if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 14.0)
+            add_compile_options(-fmodules-ts)
+        else()
+            message(WARNING "GCC 14+ required for module support, but found ${CMAKE_CXX_COMPILER_VERSION}")
+        endif()
+    elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        # Enable C++23 modules support for Clang
+        if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 16.0)
+            add_compile_options(-fmodules)
+        else()
+            message(WARNING "Clang 16+ required for module support, but found ${CMAKE_CXX_COMPILER_VERSION}")
+        endif()
+    elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+        # MSVC has built-in module support in VS2019 16.10+
+        add_compile_options(/std:c++latest)
+    endif()
+endif()
 
 # Include CMake modules directory
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")

@@ -30,11 +30,15 @@ constexpr T mean(const T* begin, const T* end) noexcept {
 /// @param begin Start iterator
 /// @param end End iterator
 /// @return The sample variance
+/// @note Uses two-pass algorithm for better performance
 template<std::floating_point T>
 constexpr T variance(const T* begin, const T* end) noexcept {
     if (begin == end) return T{0};
     
+    // First pass: calculate mean
     const T avg = mean(begin, end);
+    
+    // Second pass: calculate sum of squared differences
     T sum_sq_diff = T{0};
     std::size_t count = 0;
     
