@@ -10,7 +10,7 @@ DSQuant/
 │   │   │   └── dsquant/
 │   │   │       └── core/
 │   │   ├── test/             # Unit tests
-│   │   └── benchmark/        # Performance benchmarks
+│   │   └── benchmarks/       # Performance benchmarks
 │   └── examples/             # Example applications
 ├── docs/                     # Documentation
 ├── build/                    # Build output (generated)
@@ -91,7 +91,7 @@ Improve the code while keeping tests green.
 ### Step 1: Create Directory Structure
 
 ```bash
-mkdir -p src/newcomponent/{include/dsquant/newcomponent,test,benchmark}
+mkdir -p src/newcomponent/{include/dsquant/newcomponent,test,benchmarks}
 ```
 
 ### Step 2: Create CMakeLists.txt
@@ -113,7 +113,7 @@ endif()
 
 # Benchmarks
 if(BUILD_BENCHMARKS)
-    add_subdirectory(benchmark)
+    add_subdirectory(benchmarks)
 endif()
 ```
 
@@ -165,7 +165,7 @@ int main() {
 
 ### Step 6: Add Benchmarks (Optional)
 
-**src/newcomponent/benchmark/CMakeLists.txt:**
+**src/newcomponent/benchmarks/CMakeLists.txt:**
 ```cmake
 add_executable(benchmark_newcomponent benchmark_feature.cpp)
 target_link_libraries(benchmark_newcomponent PRIVATE 

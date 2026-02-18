@@ -20,7 +20,7 @@ DSQuant/
 │   ├── core/              # Core library
 │   │   ├── include/       # Public headers
 │   │   ├── test/          # Unit tests
-│   │   └── benchmark/     # Performance benchmarks
+│   │   └── benchmarks/    # Performance benchmarks
 │   └── examples/          # Example applications
 ├── build/                 # Build directory (generated)
 │   ├── bin/              # Compiled executables
@@ -100,14 +100,14 @@ Dependencies are automatically fetched during configuration:
 This project follows TDD principles:
 1. Write tests first in the appropriate `test/` directory
 2. Implement functionality in `include/` directory
-3. Add benchmarks in `benchmark/` directory if needed
+3. Add benchmarks in `benchmarks/` directory if needed
 4. Verify with `ctest` and performance with benchmark executables
 
 ## Contributing
 Each library component should have:
 - Public headers in `include/dsquant/<component>/`
 - Unit tests in `test/`
-- Benchmarks in `benchmark/`
+- Benchmarks in `benchmarks/`
 - CMakeLists.txt for build configuration
 
 ## License

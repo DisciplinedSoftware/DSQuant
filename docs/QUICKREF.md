@@ -60,7 +60,7 @@ DSQuant/
 ├── src/core/              # Core library
 │   ├── include/           # Public headers
 │   ├── test/              # Unit tests
-│   └── benchmark/         # Benchmarks
+│   └── benchmarks/        # Benchmarks
 ├── build/                 # Build output
 │   ├── bin/               # Executables
 │   └── lib/               # Libraries
@@ -73,7 +73,7 @@ DSQuant/
 2. **Run test** (should fail): `cmake --build build && ctest`
 3. **Implement** in `src/*/include/dsquant/*/feature.hpp`
 4. **Run test** (should pass): `cmake --build build && ctest`
-5. **Benchmark** in `src/*/benchmark/benchmark_feature.cpp`
+5. **Benchmark** in `src/*/benchmarks/benchmark_feature.cpp`
 
 ## File Templates
 
@@ -190,7 +190,7 @@ vim src/core/include/dsquant/core/newfeature.hpp
 ./build.sh
 
 # 6. Add benchmark
-vim src/core/benchmark/benchmark_newfeature.cpp
+vim src/core/benchmarks/benchmark_newfeature.cpp
 
 # 7. Run benchmark
 ./build/bin/benchmark_newfeature
