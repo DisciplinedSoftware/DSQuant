@@ -16,14 +16,22 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Output directories - separate from source
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+if(BUILD_SHARED_LIBS)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+else()
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+endif()
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 # For multi-config generators (MSVC, Xcode)
 foreach(CONFIG ${CMAKE_CONFIGURATION_TYPES})
     string(TOUPPER ${CONFIG} CONFIG_UPPER)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${CONFIG_UPPER} ${CMAKE_BINARY_DIR}/bin)
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${CONFIG_UPPER} ${CMAKE_BINARY_DIR}/lib)
+    if(BUILD_SHARED_LIBS)
+        set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${CONFIG_UPPER} ${CMAKE_BINARY_DIR}/bin)
+    else()
+        set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${CONFIG_UPPER} ${CMAKE_BINARY_DIR}/lib)
+    endif()
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${CONFIG_UPPER} ${CMAKE_BINARY_DIR}/lib)
 endforeach()
 
@@ -40,6 +48,7 @@ endif()
 option(BUILD_TESTS "Build tests" ON)
 option(BUILD_BENCHMARKS "Build benchmarks" ON)
 option(BUILD_WITH_MODULES "Build with C++23 modules" OFF)
+option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 
 # Apply module-specific compiler flags when enabled
 if(BUILD_WITH_MODULES)
@@ -88,7 +97,17 @@ FetchContent_Declare(
 )
 
 if(BUILD_BENCHMARKS)
-    FetchContent_MakeAvailable(nanobench)
+    FetchContent_GetProperties(nanobench)
+    if(NOT nanobench_POPULATED)
+        FetchContent_Populate(nanobench)
+    endif()
+
+    if(NOT TARGET nanobench)
+        add_library(nanobench INTERFACE)
+        target_include_directories(nanobench INTERFACE
+            ${nanobench_SOURCE_DIR}/src/include
+        )
+    endif()
 endif()
 
 # Enable testing
@@ -108,6 +127,7 @@ message(STATUS "C++ standard: C++${CMAKE_CXX_STANDARD}")
 message(STATUS "Build tests: ${BUILD_TESTS}")
 message(STATUS "Build benchmarks: ${BUILD_BENCHMARKS}")
 message(STATUS "Build with modules: ${BUILD_WITH_MODULES}")
+message(STATUS "Build shared libs: ${BUILD_SHARED_LIBS}")
 message(STATUS "Output directory: ${CMAKE_BINARY_DIR}")
 message(STATUS "================================")
 message(STATUS "")

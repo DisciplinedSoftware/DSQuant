@@ -41,5 +41,7 @@ int main() {
     std::cout << "  Volatility:         " << std::fixed << std::setprecision(2) 
               << (annualized_volatility * 100) << "%\n";
 
+    dsquant::foo(); // Call the function defined in statistics.cpp to ensure it's linked correctly
+
     return 0;
 }

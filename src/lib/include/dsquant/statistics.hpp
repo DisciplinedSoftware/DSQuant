@@ -62,4 +62,6 @@ constexpr T standard_deviation(const T* begin, const T* end) noexcept {
     return std::sqrt(variance(begin, end));
 }
 
+void foo();
+
 } // namespace dsquant

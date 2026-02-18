@@ -1,6 +1,6 @@
 # Core library CMakeLists.txt
 
-add_library(dsquant STATIC
+add_library(dsquant
     statistics.cpp
 )
 

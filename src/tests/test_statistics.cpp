@@ -38,5 +38,7 @@ int main() {
         expect(that % result == 42.0) << "mean of single element should be that element";
     };
 
+    dsquant::foo(); // Call the function defined in statistics.cpp to ensure it's linked correctly
+
     return 0;
 }

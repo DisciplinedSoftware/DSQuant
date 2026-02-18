@@ -1,6 +1,12 @@
 #!/bin/bash
 # Build script for DSQuant project
 
+# This script must be executed, not sourced.
+if [[ "${BASH_SOURCE[0]}" != "$0" ]]; then
+    echo "[ERROR] Do not source build.sh. Run it as: ./build.sh [options]" >&2
+    return 1
+fi
+
 set -e  # Exit on error
 
 # Default values
@@ -10,6 +16,7 @@ PARALLEL_JOBS="${PARALLEL_JOBS:-$(nproc 2>/dev/null || echo 1)}"
 BUILD_TESTS="${BUILD_TESTS:-ON}"
 BUILD_BENCHMARKS="${BUILD_BENCHMARKS:-ON}"
 BUILD_WITH_MODULES="${BUILD_WITH_MODULES:-OFF}"
+BUILD_SHARED_LIBS="${BUILD_SHARED_LIBS:-ON}"
 
 # Colors for output (ANSI escape codes for better compatibility)
 RED='\033[0;31m'
@@ -56,6 +63,14 @@ while [[ $# -gt 0 ]]; do
             BUILD_WITH_MODULES="ON"
             shift
             ;;
+        --static)
+            BUILD_SHARED_LIBS="OFF"
+            shift
+            ;;
+        --shared)
+            BUILD_SHARED_LIBS="ON"
+            shift
+            ;;
         --help)
             echo "Usage: $0 [options]"
             echo ""
@@ -66,12 +81,15 @@ while [[ $# -gt 0 ]]; do
             echo "  --no-tests         Skip building tests"
             echo "  --no-benchmarks    Skip building benchmarks"
             echo "  --with-modules     Enable C++23 modules (experimental)"
+            echo "  --static           Build static libraries"
+            echo "  --shared           Build shared libraries (default)"
             echo "  --help             Show this help message"
             echo ""
             echo "Environment variables:"
             echo "  BUILD_TYPE         Build type (Debug/Release)"
             echo "  BUILD_DIR          Build directory (default: build)"
             echo "  PARALLEL_JOBS      Number of parallel jobs (default: $(nproc))"
+            echo "  BUILD_SHARED_LIBS  Build shared libs (ON/OFF, default: ON)"
             exit 0
             ;;
         *)
@@ -91,6 +109,14 @@ if [ -n "$CLEAN" ]; then
     rm -rf "$BUILD_DIR"
 fi
 
+if [ -f "$BUILD_DIR/CMakeCache.txt" ]; then
+    PREVIOUS_BUILD_SHARED_LIBS=$(grep '^BUILD_SHARED_LIBS:BOOL=' "$BUILD_DIR/CMakeCache.txt" | cut -d= -f2 || true)
+    if [ -n "$PREVIOUS_BUILD_SHARED_LIBS" ] && [ "$PREVIOUS_BUILD_SHARED_LIBS" != "$BUILD_SHARED_LIBS" ]; then
+        print_info "Library type changed (${PREVIOUS_BUILD_SHARED_LIBS} -> ${BUILD_SHARED_LIBS}); cleaning build directory..."
+        rm -rf "$BUILD_DIR"
+    fi
+fi
+
 # Configure
 print_info "Configuring project..."
 print_info "  Build Type: $BUILD_TYPE"
@@ -98,6 +124,7 @@ print_info "  Build Directory: $BUILD_DIR"
 print_info "  Tests: $BUILD_TESTS"
 print_info "  Benchmarks: $BUILD_BENCHMARKS"
 print_info "  Modules: $BUILD_WITH_MODULES"
+print_info "  Shared Libs: $BUILD_SHARED_LIBS"
 
 # CMAKE_POLICY_DEFAULT_CMP0175: Suppresses warnings from external dependencies
 # (needed for boost.ut). Only affects external package configuration, not our code.
@@ -106,7 +133,8 @@ cmake -B "$BUILD_DIR" \
     -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
     -DBUILD_TESTS="$BUILD_TESTS" \
     -DBUILD_BENCHMARKS="$BUILD_BENCHMARKS" \
-    -DBUILD_WITH_MODULES="$BUILD_WITH_MODULES"
+    -DBUILD_WITH_MODULES="$BUILD_WITH_MODULES" \
+    -DBUILD_SHARED_LIBS="$BUILD_SHARED_LIBS"
 
 # Build
 print_info "Building project with $PARALLEL_JOBS parallel jobs..."
