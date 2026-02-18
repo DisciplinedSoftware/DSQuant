@@ -1,16 +1,3 @@
-cmake_minimum_required(VERSION 3.10...3.31)
-project(DSQuant VERSION 1.0.0 LANGUAGES CXX)
-
-# Set C++ standard
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-# Set output directory
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/out)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/out)
-
-# Add subdirectory for the library
-add_subdirectory(lib/dsquant)
 cmake_minimum_required(VERSION 3.28)
 
 # Project definition
@@ -87,22 +74,16 @@ FetchContent_Declare(
     GIT_TAG v2.1.0
 )
 
+if(BUILD_TESTS)
+    FetchContent_MakeAvailable(ut)
+endif()
+
 # nanobench - header-only benchmarking framework
 FetchContent_Declare(
     nanobench
     GIT_REPOSITORY https://github.com/martinus/nanobench.git
     GIT_TAG v4.3.11
 )
-
-# Make dependencies available
-if(BUILD_TESTS)
-    FetchContent_MakeAvailable(ut)
-    
-    # Fix CMake policy warning in ut
-    file(READ "${ut_SOURCE_DIR}/CMakeLists.txt" UT_CMAKELISTS)
-    string(REPLACE "add_custom_command(" "add_custom_command(POST_BUILD " UT_CMAKELISTS "${UT_CMAKELISTS}")
-    file(WRITE "${ut_SOURCE_DIR}/CMakeLists.txt" "${UT_CMAKELISTS}")
-endif()
 
 if(BUILD_BENCHMARKS)
     FetchContent_MakeAvailable(nanobench)

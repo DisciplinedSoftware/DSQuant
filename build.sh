@@ -99,7 +99,10 @@ print_info "  Tests: $BUILD_TESTS"
 print_info "  Benchmarks: $BUILD_BENCHMARKS"
 print_info "  Modules: $BUILD_WITH_MODULES"
 
+# CMAKE_POLICY_DEFAULT_CMP0175: Suppresses warnings from external dependencies
+# (needed for boost.ut). Only affects external package configuration, not our code.
 cmake -B "$BUILD_DIR" \
+    -DCMAKE_POLICY_DEFAULT_CMP0175=OLD \
     -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
     -DBUILD_TESTS="$BUILD_TESTS" \
     -DBUILD_BENCHMARKS="$BUILD_BENCHMARKS" \
