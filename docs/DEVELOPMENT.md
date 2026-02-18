@@ -9,7 +9,7 @@ DSQuant/
 │   │   ├── include/          # Public headers
 │   │   │   └── dsquant/
 │   │   │       └── core/
-│   │   ├── test/             # Unit tests
+│   │   ├── tests/            # Unit tests
 │   │   └── benchmarks/       # Performance benchmarks
 │   └── examples/             # Example applications
 ├── docs/                     # Documentation
@@ -26,9 +26,9 @@ DSQuant follows strict TDD principles:
 
 ### 1. Write Tests First
 
-Create a test file in the appropriate `test/` directory:
+Create a test file in the appropriate `tests/` directory:
 
-**src/core/test/test_new_feature.cpp:**
+**src/core/tests/test_new_feature.cpp:**
 ```cpp
 #include <boost/ut.hpp>
 #include <dsquant/core/new_feature.hpp>
@@ -108,7 +108,7 @@ target_compile_features(dsquant_newcomponent INTERFACE cxx_std_23)
 
 # Tests
 if(BUILD_TESTS)
-    add_subdirectory(test)
+    add_subdirectory(tests)
 endif()
 
 # Benchmarks
@@ -141,7 +141,7 @@ namespace dsquant::newcomponent {
 
 ### Step 5: Write Tests
 
-**src/newcomponent/test/CMakeLists.txt:**
+**src/newcomponent/tests/CMakeLists.txt:**
 ```cmake
 add_executable(test_newcomponent test_feature.cpp)
 target_link_libraries(test_newcomponent PRIVATE 
@@ -151,7 +151,7 @@ target_link_libraries(test_newcomponent PRIVATE
 add_test(NAME test_newcomponent COMMAND test_newcomponent)
 ```
 
-**src/newcomponent/test/test_feature.cpp:**
+**src/newcomponent/tests/test_feature.cpp:**
 ```cpp
 #include <boost/ut.hpp>
 #include <dsquant/newcomponent/feature.hpp>

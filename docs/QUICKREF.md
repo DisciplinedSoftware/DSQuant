@@ -59,7 +59,7 @@ cd build && ctest --output-on-failure
 DSQuant/
 ├── src/core/              # Core library
 │   ├── include/           # Public headers
-│   ├── test/              # Unit tests
+│   ├── tests/             # Unit tests
 │   └── benchmarks/        # Benchmarks
 ├── build/                 # Build output
 │   ├── bin/               # Executables
@@ -69,7 +69,7 @@ DSQuant/
 
 ## Adding New Features (TDD)
 
-1. **Write test** in `src/*/test/test_feature.cpp`
+1. **Write test** in `src/*/tests/test_feature.cpp`
 2. **Run test** (should fail): `cmake --build build && ctest`
 3. **Implement** in `src/*/include/dsquant/*/feature.hpp`
 4. **Run test** (should pass): `cmake --build build && ctest`
@@ -175,10 +175,10 @@ ctest --help               # Testing options
 
 ```bash
 # 1. Create new feature test
-vim src/core/test/test_newfeature.cpp
+vim src/core/tests/test_newfeature.cpp
 
 # 2. Add to CMakeLists.txt
-vim src/core/test/CMakeLists.txt
+vim src/core/tests/CMakeLists.txt
 
 # 3. Build and test (should fail)
 ./build.sh
