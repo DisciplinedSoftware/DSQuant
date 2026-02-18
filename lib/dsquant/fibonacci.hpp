@@ -9,8 +9,9 @@ namespace dsquant {
  * @brief Calculate the nth Fibonacci number
  * @param n The position in the Fibonacci sequence (0-indexed)
  * @return The nth Fibonacci number
+ * @note n must be non-negative
  */
-uint64_t fibonacci(int n);
+uint64_t fibonacci(unsigned int n);
 
 } // namespace dsquant
 

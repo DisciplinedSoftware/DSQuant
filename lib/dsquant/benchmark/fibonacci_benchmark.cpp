@@ -3,7 +3,9 @@
 #include <chrono>
 #include <iomanip>
 
-void benchmark_fibonacci(int n, int iterations = 1000000) {
+const int DEFAULT_ITERATIONS = 1000000;
+
+void benchmark_fibonacci(int n, int iterations = DEFAULT_ITERATIONS) {
     auto start = std::chrono::high_resolution_clock::now();
     
     uint64_t result = 0;
