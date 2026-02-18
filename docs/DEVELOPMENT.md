@@ -41,7 +41,7 @@ int main() {
         const auto input = 42.0;
         
         // Act
-        const auto result = dsquant::core::new_feature(input);
+        const auto result = dsquant::new_feature(input);
         
         // Assert
         expect(that % result == 84.0);
@@ -66,13 +66,13 @@ Create the implementation in `include/`:
 ```cpp
 #pragma once
 
-namespace dsquant::core {
+namespace dsquant {
 
 constexpr double new_feature(double input) noexcept {
     return input * 2.0;
 }
 
-} // namespace dsquant::core
+} // namespace dsquant
 ```
 
 ### 4. Run Tests (They Should Pass)
@@ -258,7 +258,7 @@ struct TestFixture {
 int main() {
     ankerl::nanobench::Bench().run("feature name", [&] {
         ankerl::nanobench::doNotOptimizeAway(
-            dsquant::core::feature(input)
+            dsquant::feature(input)
         );
     });
     
@@ -393,7 +393,7 @@ FetchContent_MakeAvailable(newdep)
 #include <iostream>
 
 int main() {
-    std::cout << "Result: " << dsquant::core::feature(42) << "\n";
+    std::cout << "Result: " << dsquant::feature(42) << "\n";
     return 0;
 }
 ```

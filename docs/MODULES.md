@@ -44,21 +44,21 @@ DSQuant is designed to support both traditional header-based and modern C++23 mo
 #include <cmath>
 #include <concepts>
 
-namespace dsquant::core {
+namespace dsquant {
 
 template<std::floating_point T>
 constexpr T mean(const T* begin, const T* end) noexcept {
     // Implementation
 }
 
-} // namespace dsquant::core
+} // namespace dsquant
 ```
 
 **Usage:**
 ```cpp
 #include <dsquant/core/statistics.hpp>
 
-double result = dsquant::core::mean(data, data + size);
+double result = dsquant::mean(data, data + size);
 ```
 
 ### Module Approach (Future)
@@ -69,21 +69,21 @@ export module dsquant.core.statistics;
 
 import std;
 
-export namespace dsquant::core {
+export namespace dsquant {
 
 template<std::floating_point T>
 constexpr T mean(const T* begin, const T* end) noexcept {
     // Implementation
 }
 
-} // namespace dsquant::core
+} // namespace dsquant
 ```
 
 **Usage:**
 ```cpp
 import dsquant.core.statistics;
 
-double result = dsquant::core::mean(data, data + size);
+double result = dsquant::mean(data, data + size);
 ```
 
 ## Migration Strategy

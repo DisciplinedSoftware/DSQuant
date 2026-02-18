@@ -1,10 +1,10 @@
-#include <dsquant/core/statistics.hpp>
+#include <dsquant/statistics.hpp>
 #include <iostream>
 #include <iomanip>
 #include <array>
 
 int main() {
-    using namespace dsquant::core;
+    using namespace dsquant;
 
     std::cout << "DSQuant - Basic Statistics Example\n";
     std::cout << "===================================\n\n";

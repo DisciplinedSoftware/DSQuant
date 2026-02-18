@@ -1,10 +1,10 @@
 #include <boost/ut.hpp>
-#include <dsquant/core/statistics.hpp>
+#include <dsquant/statistics.hpp>
 #include <array>
 
 int main() {
     using namespace boost::ut;
-    using namespace dsquant::core;
+    using namespace dsquant;
 
     "mean calculation"_test = [] {
         std::array<double, 5> data = {1.0, 2.0, 3.0, 4.0, 5.0};

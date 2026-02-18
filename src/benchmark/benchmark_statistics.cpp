@@ -1,10 +1,10 @@
 #include <nanobench.h>
-#include <dsquant/core/statistics.hpp>
+#include <dsquant/statistics.hpp>
 #include <random>
 #include <vector>
 
 int main() {
-    using namespace dsquant::core;
+    using namespace dsquant;
 
     // Create benchmark data
     std::vector<double> small_data(100);
