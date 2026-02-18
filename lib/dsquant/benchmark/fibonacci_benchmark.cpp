@@ -5,7 +5,7 @@
 
 const int DEFAULT_ITERATIONS = 1000000;
 
-void benchmark_fibonacci(int n, int iterations = DEFAULT_ITERATIONS) {
+void benchmark_fibonacci(unsigned int n, int iterations = DEFAULT_ITERATIONS) {
     auto start = std::chrono::high_resolution_clock::now();
     
     uint64_t result = 0;
