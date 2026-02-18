@@ -34,6 +34,10 @@ BUILD_DIR="${BUILD_DIR:-build}"
 BENCHMARK_DIR="$BUILD_DIR/bin"
 CPU_GOVERNOR_CHANGED=0
 ORIGINAL_GOVERNOR=""
+CPU_BOOST_CHANGED=0
+ORIGINAL_BOOST=""
+CPU_FREQ_LOCKED=0
+declare -A ORIGINAL_MIN_FREQS
 
 # Available benchmarks (executables starting with "benchmark_" in build/bin)
 declare -a AVAILABLE_BENCHMARKS
@@ -75,6 +79,149 @@ get_current_governor() {
     fi
 }
 
+# Function to disable CPU boost (Intel/AMD)
+disable_cpu_boost() {
+    local boost_path=""
+    local current_boost=""
+    
+    # Check for AMD boost control
+    if [[ -f /sys/devices/system/cpu/cpufreq/boost ]]; then
+        boost_path="/sys/devices/system/cpu/cpufreq/boost"
+        current_boost=$(cat "$boost_path" 2>/dev/null)
+        
+        if [[ "$current_boost" == "0" ]]; then
+            print_info "CPU boost already disabled"
+            return 0
+        fi
+        
+        print_info "Disabling CPU boost for more stable results..."
+        if echo 0 | sudo tee "$boost_path" >/dev/null 2>&1; then
+            ORIGINAL_BOOST="$current_boost"
+            CPU_BOOST_CHANGED=1
+            print_info "CPU boost disabled"
+            return 0
+        else
+            print_warning "Failed to disable CPU boost (requires sudo)"
+            return 1
+        fi
+    fi
+    
+    # Check for Intel turbo boost control
+    if [[ -f /sys/devices/system/cpu/intel_pstate/no_turbo ]]; then
+        boost_path="/sys/devices/system/cpu/intel_pstate/no_turbo"
+        current_boost=$(cat "$boost_path" 2>/dev/null)
+        
+        if [[ "$current_boost" == "1" ]]; then
+            print_info "Intel turbo boost already disabled"
+            return 0
+        fi
+        
+        print_info "Disabling Intel turbo boost for more stable results..."
+        if echo 1 | sudo tee "$boost_path" >/dev/null 2>&1; then
+            ORIGINAL_BOOST="$current_boost"
+            CPU_BOOST_CHANGED=1
+            print_info "Intel turbo boost disabled"
+            return 0
+        else
+            print_warning "Failed to disable turbo boost (requires sudo)"
+            return 1
+        fi
+    fi
+    
+    print_warning "CPU boost control not found - may still have frequency scaling"
+    return 1
+}
+
+# Function to restore CPU boost
+restore_cpu_boost() {
+    if [[ $CPU_BOOST_CHANGED -eq 1 ]] && [[ -n "$ORIGINAL_BOOST" ]]; then
+        local boost_path=""
+        
+        if [[ -f /sys/devices/system/cpu/cpufreq/boost ]]; then
+            boost_path="/sys/devices/system/cpu/cpufreq/boost"
+        elif [[ -f /sys/devices/system/cpu/intel_pstate/no_turbo ]]; then
+            boost_path="/sys/devices/system/cpu/intel_pstate/no_turbo"
+        fi
+        
+        if [[ -n "$boost_path" ]]; then
+            print_info "Restoring CPU boost setting..."
+            if echo "$ORIGINAL_BOOST" | sudo tee "$boost_path" >/dev/null 2>&1; then
+                print_info "CPU boost setting restored"
+            else
+                print_warning "Failed to restore CPU boost setting"
+            fi
+        fi
+    fi
+}
+
+# Function to lock CPU frequencies (set min = max)
+lock_cpu_frequencies() {
+    print_info "Locking CPU frequencies to maximum for stable benchmarks..."
+    
+    local cpu_count=0
+    local success_count=0
+    
+    for cpu_dir in /sys/devices/system/cpu/cpu[0-9]*; do
+        if [[ ! -d "$cpu_dir/cpufreq" ]]; then
+            continue
+        fi
+        
+        local cpu_num=$(basename "$cpu_dir" | sed 's/cpu//')
+        local max_freq_file="$cpu_dir/cpufreq/scaling_max_freq"
+        local min_freq_file="$cpu_dir/cpufreq/scaling_min_freq"
+        
+        if [[ ! -f "$max_freq_file" ]] || [[ ! -f "$min_freq_file" ]]; then
+            continue
+        fi
+        
+        local max_freq=$(cat "$max_freq_file" 2>/dev/null)
+        local min_freq=$(cat "$min_freq_file" 2>/dev/null)
+        
+        if [[ -z "$max_freq" ]] || [[ -z "$min_freq" ]]; then
+            continue
+        fi
+        
+        cpu_count=$((cpu_count + 1))
+        
+        # Save original min frequency
+        ORIGINAL_MIN_FREQS[$cpu_num]="$min_freq"
+        
+        # Set min frequency to max frequency
+        if echo "$max_freq" | sudo tee "$min_freq_file" >/dev/null 2>&1; then
+            success_count=$((success_count + 1))
+        else
+            print_warning "Failed to lock frequency for CPU $cpu_num"
+        fi
+    done
+    
+    if [[ $success_count -gt 0 ]]; then
+        CPU_FREQ_LOCKED=1
+        print_info "Locked frequencies for $success_count/$cpu_count CPUs"
+        return 0
+    else
+        print_warning "Failed to lock CPU frequencies (requires sudo)"
+        return 1
+    fi
+}
+
+# Function to restore CPU frequencies
+restore_cpu_frequencies() {
+    if [[ $CPU_FREQ_LOCKED -eq 1 ]] && [[ ${#ORIGINAL_MIN_FREQS[@]} -gt 0 ]]; then
+        print_info "Restoring CPU frequency limits..."
+        
+        for cpu_num in "${!ORIGINAL_MIN_FREQS[@]}"; do
+            local min_freq_file="/sys/devices/system/cpu/cpu${cpu_num}/cpufreq/scaling_min_freq"
+            local original_min="${ORIGINAL_MIN_FREQS[$cpu_num]}"
+            
+            if [[ -f "$min_freq_file" ]]; then
+                echo "$original_min" | sudo tee "$min_freq_file" >/dev/null 2>&1
+            fi
+        done
+        
+        print_info "CPU frequency limits restored"
+    fi
+}
+
 # Function to set CPU to performance mode
 set_performance_mode() {
     local current_governor
@@ -85,28 +232,48 @@ set_performance_mode() {
         return 1
     fi
     
-    if [[ "$current_governor" == "performance" ]]; then
+    local governor_changed=0
+    
+    if [[ "$current_governor" != "performance" ]]; then
+        print_info "Current CPU governor: $current_governor"
+        print_info "Setting CPU governor to performance mode..."
+        
+        if echo performance | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor >/dev/null 2>&1; then
+            ORIGINAL_GOVERNOR="$current_governor"
+            CPU_GOVERNOR_CHANGED=1
+            governor_changed=1
+            print_info "CPU governor set to performance mode"
+        else
+            print_warning "Failed to set CPU governor (requires sudo)"
+        fi
+    else
         print_info "CPU governor already set to performance mode"
-        return 0
     fi
     
-    print_info "Current CPU governor: $current_governor"
-    print_info "Setting CPU governor to performance mode..."
-    
-    if echo performance | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor >/dev/null 2>&1; then
-        ORIGINAL_GOVERNOR="$current_governor"
-        CPU_GOVERNOR_CHANGED=1
-        print_info "CPU governor set to performance mode"
-        return 0
+    # Disable CPU boost and lock frequencies unless --allow-turbo is set
+    if [[ $ALLOW_TURBO -eq 1 ]]; then
+        print_info "Turbo boost allowed - running with maximum performance (less stable)"
     else
-        print_warning "Failed to set CPU governor (requires sudo)"
+        # Disable CPU boost for maximum stability
+        disable_cpu_boost
+        
+        # Lock CPU frequencies to eliminate scaling
+        lock_cpu_frequencies
+    fi
+    
+    if [[ $governor_changed -eq 0 ]] && [[ $CPU_BOOST_CHANGED -eq 0 ]] && [[ $CPU_FREQ_LOCKED -eq 0 ]]; then
         print_warning "Benchmarks may have unstable results due to CPU frequency scaling"
         return 1
     fi
+    
+    return 0
 }
 
 # Function to restore CPU governor
 restore_cpu_governor() {
+    # Restore frequencies first
+    restore_cpu_frequencies
+    
     if [[ $CPU_GOVERNOR_CHANGED -eq 1 ]] && [[ -n "$ORIGINAL_GOVERNOR" ]]; then
         print_info "Restoring CPU governor to $ORIGINAL_GOVERNOR..."
         if echo "$ORIGINAL_GOVERNOR" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor >/dev/null 2>&1; then
@@ -115,6 +282,9 @@ restore_cpu_governor() {
             print_warning "Failed to restore CPU governor"
         fi
     fi
+    
+    # Also restore boost setting
+    restore_cpu_boost
 }
 
 # Function to run a single benchmark
@@ -152,16 +322,21 @@ Arguments:
 Options:
   --list                List available benchmarks
   --no-perf-mode        Skip setting CPU to performance mode
+  --allow-turbo         Allow turbo boost (faster but less stable results)
   --help                Show this help message
 
 Examples:
-  $0 --all                                    # Run all benchmarks
+  $0 --all                                    # Run all benchmarks (stable mode)
   $0 benchmark_statistics                     # Run specific benchmark
   $0 benchmark_statistics fibonacci_benchmark # Run multiple benchmarks
   $0 --list                                   # List available benchmarks
+  $0 --allow-turbo --all                      # Run with turbo boost (faster, less stable)
 
-Note: Setting CPU to performance mode requires sudo privileges.
-      You may be prompted for your password.
+Note: Setting CPU to performance mode, disabling boost, and locking frequencies
+      requires sudo privileges. You may be prompted for your password.
+      
+      Default mode (without --allow-turbo) prioritizes reproducibility over speed.
+      Use --allow-turbo for peak performance measurements.
 
 EOF
 }
@@ -172,6 +347,7 @@ trap restore_cpu_governor EXIT INT TERM
 # Parse command line arguments
 RUN_ALL=0
 NO_PERF_MODE=0
+ALLOW_TURBO=0
 declare -a BENCHMARKS_TO_RUN
 
 if [[ $# -eq 0 ]]; then
@@ -196,6 +372,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --no-perf-mode)
             NO_PERF_MODE=1
+            shift
+            ;;
+        --allow-turbo)
+            ALLOW_TURBO=1
             shift
             ;;
         -*)
