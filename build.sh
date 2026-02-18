@@ -11,11 +11,11 @@ BUILD_TESTS="${BUILD_TESTS:-ON}"
 BUILD_BENCHMARKS="${BUILD_BENCHMARKS:-ON}"
 BUILD_WITH_MODULES="${BUILD_WITH_MODULES:-OFF}"
 
-# Colors for output (more compatible with various terminals)
-RED=$'\033[0;31m'
-GREEN=$'\033[0;32m'
-YELLOW=$'\033[1;33m'
-NC=$'\033[0m' # No Color
+# Colors for output (ANSI escape codes for better compatibility)
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
 
 print_info() {
     printf "%b\n" "${GREEN}[INFO]${NC} $1"
