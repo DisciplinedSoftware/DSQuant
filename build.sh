@@ -6,27 +6,27 @@ set -e  # Exit on error
 # Default values
 BUILD_TYPE="${BUILD_TYPE:-Release}"
 BUILD_DIR="${BUILD_DIR:-build}"
-PARALLEL_JOBS="${PARALLEL_JOBS:-$(nproc)}"
+PARALLEL_JOBS="${PARALLEL_JOBS:-$(nproc 2>/dev/null || echo 1)}"
 BUILD_TESTS="${BUILD_TESTS:-ON}"
 BUILD_BENCHMARKS="${BUILD_BENCHMARKS:-ON}"
 BUILD_WITH_MODULES="${BUILD_WITH_MODULES:-OFF}"
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+# Colors for output (more compatible with various terminals)
+RED=$'\033[0;31m'
+GREEN=$'\033[0;32m'
+YELLOW=$'\033[1;33m'
+NC=$'\033[0m' # No Color
 
 print_info() {
-    echo -e "${GREEN}[INFO]${NC} $1"
+    printf "%b\n" "${GREEN}[INFO]${NC} $1"
 }
 
 print_warning() {
-    echo -e "${YELLOW}[WARNING]${NC} $1"
+    printf "%b\n" "${YELLOW}[WARNING]${NC} $1"
 }
 
 print_error() {
-    echo -e "${RED}[ERROR]${NC} $1"
+    printf "%b\n" "${RED}[ERROR]${NC} $1" >&2
 }
 
 # Parse command line arguments
@@ -112,8 +112,7 @@ cmake --build "$BUILD_DIR" -j "$PARALLEL_JOBS"
 # Run tests if built
 if [ "$BUILD_TESTS" = "ON" ]; then
     print_info "Running tests..."
-    cd "$BUILD_DIR" && ctest --output-on-failure
-    cd ..
+    (cd "$BUILD_DIR" && ctest --output-on-failure)
     print_info "Tests completed successfully!"
 fi
 

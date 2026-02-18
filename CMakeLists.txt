@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.10...3.31)
 project(DSQuant VERSION 1.0.0 LANGUAGES CXX)
 
 # Set C++ standard
@@ -97,6 +97,11 @@ FetchContent_Declare(
 # Make dependencies available
 if(BUILD_TESTS)
     FetchContent_MakeAvailable(ut)
+    
+    # Fix CMake policy warning in ut
+    file(READ "${ut_SOURCE_DIR}/CMakeLists.txt" UT_CMAKELISTS)
+    string(REPLACE "add_custom_command(" "add_custom_command(POST_BUILD " UT_CMAKELISTS "${UT_CMAKELISTS}")
+    file(WRITE "${ut_SOURCE_DIR}/CMakeLists.txt" "${UT_CMAKELISTS}")
 endif()
 
 if(BUILD_BENCHMARKS)
