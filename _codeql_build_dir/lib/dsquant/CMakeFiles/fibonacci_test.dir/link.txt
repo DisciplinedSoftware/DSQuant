@@ -1,0 +1,1 @@
+/home/runner/work/DSQuant/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++ -O3 -DNDEBUG -Wl,--dependency-file=CMakeFiles/fibonacci_test.dir/link.d CMakeFiles/fibonacci_test.dir/test/fibonacci_test.cpp.o -o ../../output/fibonacci_test  -Wl,-rpath,/home/runner/work/DSQuant/DSQuant/_codeql_build_dir/output ../../output/libdsquant.so
