@@ -1,7 +1,7 @@
 # Core library CMakeLists.txt
 
 add_library(dsquant
-    statistics.cpp
+    src/statistics.cpp
 )
 
 target_include_directories(dsquant PUBLIC
