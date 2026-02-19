@@ -1,0 +1,5 @@
+# CTest custom configuration - automatically loaded by CTest
+# This file defines post-test actions for coverage analysis
+
+# Execute coverage data collection after tests complete
+list(APPEND CTEST_CUSTOM_POST_TEST "${CMAKE_BINARY_DIR}/CTestCoverageCollect.cmake")
