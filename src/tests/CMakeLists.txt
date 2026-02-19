@@ -1,6 +1,10 @@
 include(FetchContent)
 
 if(NOT TARGET Boost::ut)
+	if(POLICY CMP0175)
+		cmake_policy(SET CMP0175 OLD)
+	endif()
+
 	FetchContent_Declare(
 		boost_ut
 		GIT_REPOSITORY https://github.com/boost-ext/ut.git
