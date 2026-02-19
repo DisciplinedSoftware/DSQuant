@@ -14,6 +14,11 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# Options
+option(BUILD_BENCHMARKS "Build benchmarks" ON)
+option(BUILD_WITH_MODULES "Build with C++23 modules" OFF)
+option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+
 # Output directories - separate from source
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 if(BUILD_SHARED_LIBS)
@@ -43,11 +48,6 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     add_compile_options(/W4 /permissive-)
 endif()
-
-# Options
-option(BUILD_BENCHMARKS "Build benchmarks" ON)
-option(BUILD_WITH_MODULES "Build with C++23 modules" OFF)
-option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 
 # Apply module-specific compiler flags when enabled
 if(BUILD_WITH_MODULES)
