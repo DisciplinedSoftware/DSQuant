@@ -55,14 +55,14 @@ cd build && ctest --output-on-failure
 
 ## Project Layout
 
-```
+```text
 DSQuant/
-├── src/
-│   ├── lib/               # Core library
-│   │   └── include/dsquant/
-│   ├── tests/             # Unit tests
-│   ├── benchmarks/        # Benchmarks
-│   └── examples/          # Example applications
+├── lib/
+│   ├── include/dsquant/   # Public headers
+│   └── src/               # Library implementation
+├── tests/                 # Unit tests
+├── benchmarks/            # Benchmarks
+├── examples/              # Example applications
 ├── build/                 # Build output
 │   ├── bin/               # Executables
 │   └── lib/               # Libraries
@@ -71,15 +71,16 @@ DSQuant/
 
 ## Adding New Features (TDD)
 
-1. **Write test** in `src/*/tests/test_feature.cpp`
+1. **Write test** in `tests/test_feature.cpp`
 2. **Run test** (should fail): `cmake --build build && ctest`
-3. **Implement** in `src/*/include/dsquant/*/feature.hpp`
+3. **Implement** in `lib/include/dsquant/feature.hpp`
 4. **Run test** (should pass): `cmake --build build && ctest`
-5. **Benchmark** in `src/*/benchmarks/benchmark_feature.cpp`
+5. **Benchmark** in `benchmarks/benchmark_feature.cpp`
 
 ## File Templates
 
 ### Test File
+
 ```cpp
 #include <boost/ut.hpp>
 #include <dsquant/feature.hpp>
@@ -96,6 +97,7 @@ int main() {
 ```
 
 ### Header File
+
 ```cpp
 #pragma once
 
@@ -110,6 +112,7 @@ constexpr T function(T value) noexcept {
 ```
 
 ### Benchmark File
+
 ```cpp
 #include <nanobench.h>
 #include <dsquant/feature.hpp>
@@ -125,7 +128,7 @@ int main() {
 ## Build Options
 
 | Option | Default | Description |
-|--------|---------|-------------|
+| ------ | ------- | ----------- |
 | `BUILD_TESTS` | ON | Build tests |
 | `BUILD_BENCHMARKS` | ON | Build benchmarks |
 | `BUILD_WITH_MODULES` | OFF | C++23 modules (experimental) |
@@ -133,7 +136,7 @@ int main() {
 ## Requirements
 
 - **CMake**: 3.28+
-- **Compiler**: 
+- **Compiler**:
   - GCC 13+ (14+ for modules)
   - Clang 16+
   - MSVC 2022+
@@ -162,7 +165,7 @@ int main() {
 - Use `./build.sh --clean` for fresh builds
 - Run tests after every change
 - Add benchmarks for performance-critical code
-- Keep headers in `src/lib/include/dsquant/`
+- Keep headers in `lib/include/dsquant/`
 - Follow TDD: Test → Implement → Refactor
 
 ## Getting Help
@@ -177,22 +180,22 @@ ctest --help               # Testing options
 
 ```bash
 # 1. Create new feature test
-vim src/tests/test_newfeature.cpp
+vim tests/test_newfeature.cpp
 
 # 2. Add to CMakeLists.txt
-vim src/tests/CMakeLists.txt
+vim tests/CMakeLists.txt
 
 # 3. Build and test (should fail)
 ./build.sh
 
 # 4. Implement feature
-vim src/lib/include/dsquant/newfeature.hpp
+vim lib/include/dsquant/newfeature.hpp
 
 # 5. Build and test (should pass)
 ./build.sh
 
 # 6. Add benchmark
-vim src/benchmarks/benchmark_newfeature.cpp
+vim benchmarks/benchmark_newfeature.cpp
 
 # 7. Run benchmark
 ./build/bin/benchmark_newfeature
@@ -201,7 +204,7 @@ vim src/benchmarks/benchmark_newfeature.cpp
 ## Troubleshooting
 
 | Issue | Solution |
-|-------|----------|
+| ----- | -------- |
 | CMake too old | `pip install cmake --upgrade` |
 | Compiler not found | Install GCC 13+ or Clang 16+ |
 | Build fails | `./build.sh --clean` |
@@ -218,17 +221,20 @@ vim src/benchmarks/benchmark_newfeature.cpp
 ## Cross-Platform
 
 ### Linux (Primary)
+
 ```bash
 ./build.sh
 ```
 
 ### Windows (MSVC)
+
 ```cmd
 cmake -B build -G "Visual Studio 17 2022"
 cmake --build build --config Release
 ```
 
 ### macOS
+
 ```bash
 ./build.sh
 ```

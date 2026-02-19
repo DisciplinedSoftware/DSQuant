@@ -1,10 +1,13 @@
 # DSQuant
+
 Library for quantitative finance
 
 ## Overview
+
 DSQuant is a modern C++23 library for quantitative finance, built with test-driven development (TDD) principles and performance in mind.
 
 ## Features
+
 - **Modern C++23**: Leveraging the latest C++ features including concepts
 - **Module Support**: Prepared for C++23 modules (currently using traditional headers)
 - **Cross-compiler**: Supports GCC, Clang, and MSVC
@@ -14,15 +17,16 @@ DSQuant is a modern C++23 library for quantitative finance, built with test-driv
 - **Clean Architecture**: Separate output directories for libraries and binaries
 
 ## Project Structure
-```
+
+```text
 DSQuant/
-├── src/
-│   ├── lib/               # Core library
-│   │   └── include/
-│   │       └── dsquant/
-│   ├── tests/             # Unit tests
-│   ├── benchmarks/        # Performance benchmarks
-│   └── examples/          # Example applications
+├── lib/
+│   ├── include/
+│   │   └── dsquant/
+│   └── src/
+├── tests/                 # Unit tests
+├── benchmarks/            # Performance benchmarks
+├── examples/              # Example applications
 ├── build/                 # Build directory (generated)
 │   ├── bin/              # Compiled executables
 │   └── lib/              # Compiled libraries
@@ -30,6 +34,7 @@ DSQuant/
 ```
 
 ## Prerequisites
+
 - CMake 3.28 or higher
 - C++23 capable compiler:
   - GCC 14+ (recommended for module support)
@@ -39,6 +44,7 @@ DSQuant/
 ## Building
 
 ### Linux (Default)
+
 ```bash
 # Configure
 cmake -B build -DCMAKE_BUILD_TYPE=Release
@@ -51,17 +57,20 @@ cd build && ctest --output-on-failure
 ```
 
 ### With Module Support (Experimental)
+
 ```bash
 cmake -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_MODULES=ON
 cmake --build build -j$(nproc)
 ```
 
 ### Build Options
+
 - `BUILD_TESTS=ON/OFF` - Build unit tests (default: ON)
 - `BUILD_BENCHMARKS=ON/OFF` - Build benchmarks (default: ON)
 - `BUILD_WITH_MODULES=ON/OFF` - Use C++23 modules (default: OFF, experimental)
 
 ### Different Compilers
+
 ```bash
 # GCC
 cmake -B build -DCMAKE_CXX_COMPILER=g++-14
@@ -74,7 +83,9 @@ cmake -B build -G "Visual Studio 17 2022"
 ```
 
 ## Running Examples
+
 After building, executables are in the `build/bin` directory:
+
 ```bash
 # Run basic example
 ./build/bin/basic_example
@@ -84,6 +95,7 @@ After building, executables are in the `build/bin` directory:
 ```
 
 ## Running Tests
+
 ```bash
 # Using CTest
 cd build && ctest --output-on-failure
@@ -93,23 +105,30 @@ cd build && ctest --output-on-failure
 ```
 
 ## Dependencies
+
 Dependencies are automatically fetched during configuration:
+
 - [boost.ut](https://github.com/boost-ext/ut) v2.1.0 - Modern C++ testing framework
 - [nanobench](https://github.com/martinus/nanobench) v4.3.11 - Microbenchmarking library
 
 ## Development
+
 This project follows TDD principles:
-1. Write tests first in the `src/tests/` directory
-2. Implement functionality in `src/lib/include/` directory
-3. Add benchmarks in `src/benchmarks/` directory if needed
+
+1. Write tests first in the `tests/` directory
+2. Implement functionality in the `lib/include/` directory
+3. Add benchmarks in the `benchmarks/` directory if needed
 4. Verify with `ctest` and performance with benchmark executables
 
 ## Contributing
+
 Each library component should have:
-- Public headers in `src/lib/include/dsquant/`
-- Unit tests in `src/tests/`
-- Benchmarks in `src/benchmarks/`
+
+- Public headers in `lib/include/dsquant/`
+- Unit tests in `tests/`
+- Benchmarks in `benchmarks/`
 - CMakeLists.txt for build configuration
 
 ## License
+
 See LICENSE file for details.

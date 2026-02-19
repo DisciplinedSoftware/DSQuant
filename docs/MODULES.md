@@ -6,13 +6,15 @@ DSQuant is designed to support both traditional header-based and modern C++23 mo
 
 ## Current Status
 
-**Traditional Headers (Current Implementation)**
+### Traditional Headers (Current Implementation)
+
 - ✅ Full support across all compilers (GCC 13+, Clang 16+, MSVC 2022+)
 - ✅ Works on Linux, Windows, macOS
 - ✅ Standard CMake integration
 - ✅ Fast incremental builds
 
-**C++23 Modules (Future/Experimental)**
+### C++23 Modules (Future/Experimental)
+
 - ⚠️ Experimental support via `BUILD_WITH_MODULES=ON`
 - ⚠️ Requires GCC 14+, Clang 16+, or MSVC 17.10+
 - ⚠️ CMake 3.28+ with experimental module support
@@ -21,6 +23,7 @@ DSQuant is designed to support both traditional header-based and modern C++23 mo
 ## Why Modules?
 
 ### Benefits
+
 1. **Faster Compilation**: No redundant header parsing
 2. **Better Encapsulation**: Clear interface vs implementation separation
 3. **No Header Guards**: Modules are imported once
@@ -28,6 +31,7 @@ DSQuant is designed to support both traditional header-based and modern C++23 mo
 5. **Isolation**: Changes don't trigger massive rebuilds
 
 ### Challenges
+
 1. **Compiler Support**: Still experimental in many compilers
 2. **Build Systems**: CMake support is evolving
 3. **Migration**: Gradual transition needed
@@ -37,7 +41,8 @@ DSQuant is designed to support both traditional header-based and modern C++23 mo
 
 ### Traditional Header Approach (Current)
 
-**src/lib/include/dsquant/statistics.hpp:**
+#### lib/include/dsquant/statistics.hpp
+
 ```cpp
 #pragma once
 
@@ -55,6 +60,7 @@ constexpr T mean(const T* begin, const T* end) noexcept {
 ```
 
 **Usage:**
+
 ```cpp
 #include <dsquant/statistics.hpp>
 
@@ -63,7 +69,8 @@ double result = dsquant::mean(data, data + size);
 
 ### Module Approach (Future)
 
-**src/lib/statistics.cppm:**
+**lib/src/statistics.cppm:**
+
 ```cpp
 export module dsquant.core.statistics;
 
@@ -80,6 +87,7 @@ constexpr T mean(const T* begin, const T* end) noexcept {
 ```
 
 **Usage:**
+
 ```cpp
 import dsquant.core.statistics;
 
@@ -89,16 +97,19 @@ double result = dsquant::mean(data, data + size);
 ## Migration Strategy
 
 ### Phase 1: Header-Only (Current)
+
 - Maintain traditional headers
 - Ensure cross-compiler compatibility
 - Focus on functionality and testing
 
 ### Phase 2: Dual Implementation
+
 - Add module implementations alongside headers
 - Use `BUILD_WITH_MODULES` option to choose
 - Compare compilation times and compatibility
 
 ### Phase 3: Module-First (Future)
+
 - Module implementation as primary
 - Headers available for legacy support
 - Document migration guide for users
@@ -107,19 +118,22 @@ double result = dsquant::mean(data, data + size);
 
 ### Prerequisites
 
-**GCC:**
+#### GCC
+
 ```bash
 # GCC 14+ with module support
 g++ --version  # Should be 14.0 or higher
 ```
 
 **Clang:**
+
 ```bash
 # Clang 16+ with module support
 clang++ --version  # Should be 16.0 or higher
 ```
 
 **MSVC:**
+
 - Visual Studio 2022 17.10 or later
 - `/std:c++latest` flag
 
@@ -138,6 +152,7 @@ cmake --build build -j$(nproc)
 ### Current Implementation
 
 CMakeLists.txt detects module support:
+
 ```cmake
 if(BUILD_WITH_MODULES)
     if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
@@ -157,13 +172,14 @@ endif()
 ### Future Implementation
 
 When modules are fully implemented:
+
 ```cmake
 add_library(dsquant_core)
 target_sources(dsquant_core
     PUBLIC
         FILE_SET CXX_MODULES FILES
-            src/lib/statistics.cppm
-            src/lib/options.cppm
+            lib/src/statistics.cppm
+            lib/src/options.cppm
 )
 ```
 
@@ -172,16 +188,17 @@ target_sources(dsquant_core
 ### Expected Results (when implemented)
 
 | Metric | Headers | Modules | Improvement |
-|--------|---------|---------|-------------|
+| ------ | ------- | ------- | ----------- |
 | Clean Build | 10.0s | 15.0s | -50% (initial BMI) |
 | Incremental Build | 5.0s | 1.0s | +80% |
 | Binary Size | 2.5MB | 2.3MB | +8% |
 
-*Note: Actual results depend on project size and compiler*
+**Note:** **Actual results depend on project size and compiler**
 
 ## Testing Strategy
 
 Both implementations must:
+
 1. Pass identical test suites
 2. Produce identical results
 3. Maintain API compatibility
@@ -198,6 +215,7 @@ Both implementations must:
 ## Contributing
 
 When adding new functionality:
+
 1. Implement with traditional headers first
 2. Ensure all tests pass
 3. Add module implementation later (optional)
@@ -205,17 +223,17 @@ When adding new functionality:
 
 ## FAQ
 
-**Q: When will modules be the default?**
-A: When compiler support is stable across GCC, Clang, and MSVC (estimated: 2025+)
+- Q: When will modules be the default?  
+  A: When compiler support is stable across GCC, Clang, and MSVC (estimated: 2025+)
 
-**Q: Can I use modules now?**
-A: Yes, experimentally with `BUILD_WITH_MODULES=ON`. Headers remain recommended.
+- Q: Can I use modules now?  
+  A: Yes, experimentally with `BUILD_WITH_MODULES=ON`. Headers remain recommended.
 
-**Q: Will headers be removed?**
-A: Not in the foreseeable future. Headers will remain for compatibility.
+- Q: Will headers be removed?  
+  A: Not in the foreseeable future. Headers will remain for compatibility.
 
-**Q: Do modules affect runtime performance?**
-A: No, only compilation time. Binary performance is identical.
+- Q: Do modules affect runtime performance?  
+  A: No, only compilation time. Binary performance is identical.
 
-**Q: What about third-party libraries?**
-A: We'll continue supporting header-based dependencies (boost.ut, nanobench) until they adopt modules.
+- Q: What about third-party libraries?  
+  A: We'll continue supporting header-based dependencies (boost.ut, nanobench) until they adopt modules.

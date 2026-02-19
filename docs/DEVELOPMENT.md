@@ -2,15 +2,15 @@
 
 ## Project Structure
 
-```
+```text
 DSQuant/
-├── src/                      # Source code
-│   ├── lib/                  # Library
-│   │   └── include/
-│   │       └── dsquant/
-│   ├── tests/                # Unit tests
-│   ├── benchmarks/           # Performance benchmarks
-│   └── examples/             # Example applications
+├── lib/                      # Library
+│   ├── include/
+│   │   └── dsquant/
+│   └── src/
+├── tests/                    # Unit tests
+├── benchmarks/               # Performance benchmarks
+├── examples/                 # Example applications
 ├── docs/                     # Documentation
 ├── build/                    # Build output (generated)
 │   ├── bin/                  # Executables
@@ -27,7 +27,8 @@ DSQuant follows strict TDD principles:
 
 Create a test file in the appropriate `tests/` directory:
 
-**src/tests/test_new_feature.cpp:**
+**tests/test_new_feature.cpp:**
+
 ```cpp
 #include <boost/ut.hpp>
 #include <dsquant/new_feature.hpp>
@@ -59,9 +60,10 @@ cd build && ctest --output-on-failure
 
 ### 3. Implement Functionality
 
-Create the implementation in `include/`:
+Create the implementation in `lib/include/`:
 
-**src/lib/include/dsquant/new_feature.hpp:**
+**lib/include/dsquant/new_feature.hpp:**
+
 ```cpp
 #pragma once
 
@@ -90,12 +92,13 @@ Improve the code while keeping tests green.
 ### Step 1: Create Directory Structure
 
 ```bash
-mkdir -p src/newcomponent/{include/dsquant/newcomponent,tests,benchmarks}
+mkdir -p lib/newcomponent/{include/dsquant/newcomponent,src,tests,benchmarks}
 ```
 
 ### Step 2: Create CMakeLists.txt
 
-**src/newcomponent/CMakeLists.txt:**
+**lib/newcomponent/CMakeLists.txt:**
+
 ```cmake
 # New component library
 add_library(dsquant_newcomponent INTERFACE)
@@ -118,16 +121,18 @@ endif()
 
 ### Step 3: Add to Root CMake
 
-Update **src/CMakeLists.txt:**
+Update **CMakeLists.txt:**
+
 ```cmake
 add_subdirectory(lib)
-add_subdirectory(newcomponent)  # Add this line
+add_subdirectory(lib/newcomponent)  # Add this line
 add_subdirectory(examples)
 ```
 
 ### Step 4: Implement Headers
 
-**src/newcomponent/include/dsquant/newcomponent/feature.hpp:**
+**lib/newcomponent/include/dsquant/newcomponent/feature.hpp:**
+
 ```cpp
 #pragma once
 
@@ -141,6 +146,7 @@ namespace dsquant::newcomponent {
 ### Step 5: Write Tests
 
 **src/newcomponent/tests/CMakeLists.txt:**
+
 ```cmake
 add_executable(test_newcomponent test_feature.cpp)
 target_link_libraries(test_newcomponent PRIVATE 
@@ -151,6 +157,7 @@ add_test(NAME test_newcomponent COMMAND test_newcomponent)
 ```
 
 **src/newcomponent/tests/test_feature.cpp:**
+
 ```cpp
 #include <boost/ut.hpp>
 #include <dsquant/newcomponent/feature.hpp>
@@ -165,6 +172,7 @@ int main() {
 ### Step 6: Add Benchmarks (Optional)
 
 **src/newcomponent/benchmarks/CMakeLists.txt:**
+
 ```cmake
 add_executable(benchmark_newcomponent benchmark_feature.cpp)
 target_link_libraries(benchmark_newcomponent PRIVATE 
@@ -316,6 +324,7 @@ bench.run("large input", [&] {
 ### C++23 Features
 
 Use modern C++ features:
+
 ```cpp
 // Concepts
 template<std::floating_point T>
@@ -342,6 +351,7 @@ auto [min, max] = std::minmax({1, 2, 3, 4, 5});
 ### Documentation
 
 Use Doxygen-style comments:
+
 ```cpp
 /// @brief Calculate the mean of a range
 /// @tparam T Value type (must be floating point)
@@ -375,6 +385,7 @@ cd build && ctest --output-on-failure --parallel
 ### Adding a Dependency
 
 Update root **CMakeLists.txt**:
+
 ```cmake
 FetchContent_Declare(
     newdep
@@ -386,7 +397,8 @@ FetchContent_MakeAvailable(newdep)
 
 ### Creating an Example
 
-**src/examples/new_example.cpp:**
+**examples/new_example.cpp:**
+
 ```cpp
 #include <dsquant/feature.hpp>
 #include <iostream>
@@ -397,7 +409,8 @@ int main() {
 }
 ```
 
-Update **src/examples/CMakeLists.txt:**
+Update **examples/CMakeLists.txt:**
+
 ```cmake
 add_executable(new_example new_example.cpp)
 target_link_libraries(new_example PRIVATE dsquant_core)
