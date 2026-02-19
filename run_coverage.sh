@@ -21,11 +21,11 @@ echo ""
 
 # Detect OS and open report
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    xdg-open "$SCRIPT_DIR/build-coverage/html/index.html" 2>/dev/null || echo "Report available at: file://$SCRIPT_DIR/build-coverage/html/index.html"
+    xdg-open "$SCRIPT_DIR/build-coverage/html/index.html" &>/dev/null || echo "Report available at: file://$SCRIPT_DIR/build-coverage/html/index.html"
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-    open "$SCRIPT_DIR/build-coverage/html/index.html"
+    open "$SCRIPT_DIR/build-coverage/html/index.html" &>/dev/null || echo "Report available at: file://$SCRIPT_DIR/build-coverage/html/index.html"
 elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
-    start "$SCRIPT_DIR\\build-coverage\\html\\index.html"
+    start "$SCRIPT_DIR\\build-coverage\\html\\index.html" &>/dev/null || echo "Report available at: file://$SCRIPT_DIR/build-coverage/html/index.html"
 else
     echo "Report available at: file://$SCRIPT_DIR/build-coverage/html/index.html"
 fi
