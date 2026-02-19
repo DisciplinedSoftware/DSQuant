@@ -1,3 +1,13 @@
+include(FetchContent)
+
+FetchContent_Declare(
+	ut
+	GIT_REPOSITORY https://github.com/boost-ext/ut.git
+	GIT_TAG v2.1.0
+    GIT_SHALLOW TRUE
+)
+FetchContent_MakeAvailable(ut)
+
 # Tests for core library
 add_executable(test_statistics test_statistics.cpp main.cpp)
 target_link_libraries(test_statistics PRIVATE dsquant Boost::ut)
