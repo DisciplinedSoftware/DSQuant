@@ -1,0 +1,39 @@
+#!/bin/bash
+# Post-test coverage report generation script
+# This script is run after tests complete to generate coverage reports
+
+set -e
+
+# Configuration from CMake
+LCOV_EXECUTABLE="@LCOV_EXECUTABLE@"
+GENHTML_EXECUTABLE="@GENHTML_EXECUTABLE@"
+CMAKE_BINARY_DIR="@CMAKE_BINARY_DIR@"
+
+# Only proceed if coverage tools are available
+if [ -z "$LCOV_EXECUTABLE" ] || [ -z "$GENHTML_EXECUTABLE" ]; then
+    echo "Coverage tools not found - skipping coverage report generation"
+    exit 0
+fi
+
+echo "Generating coverage report..."
+
+cd "$CMAKE_BINARY_DIR"
+
+# Capture coverage data
+echo "Capturing coverage data..."
+"$LCOV_EXECUTABLE" --capture --directory . --output-file coverage.info
+
+# Remove unwanted files from coverage
+echo "Filtering coverage data..."
+"$LCOV_EXECUTABLE" --remove coverage.info \
+    '*/_deps/*' \
+    '*/tests/*' \
+    '/usr/*' \
+    '*/external/*' \
+    --output-file coverage.info
+
+# Generate HTML report
+echo "Generating HTML report..."
+"$GENHTML_EXECUTABLE" coverage.info --output-directory html
+
+echo "Coverage report generated in html/"
