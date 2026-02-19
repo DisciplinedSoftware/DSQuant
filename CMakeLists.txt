@@ -89,6 +89,9 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 # Enable testing via CTest (defines BUILD_TESTING)
 include(CTest)
 
+# Setup code coverage if enabled
+include(CodeCoverage)
+
 # Add subdirectories
 add_subdirectory(lib)
 

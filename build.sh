@@ -17,6 +17,7 @@ BUILD_TESTING="${BUILD_TESTING:-${BUILD_TESTS:-ON}}"
 BUILD_BENCHMARKS="${BUILD_BENCHMARKS:-ON}"
 BUILD_WITH_MODULES="${BUILD_WITH_MODULES:-OFF}"
 BUILD_SHARED_LIBS="${BUILD_SHARED_LIBS:-ON}"
+ENABLE_COVERAGE="${ENABLE_COVERAGE:-OFF}"
 
 # Colors for output (ANSI escape codes for better compatibility)
 RED='\033[0;31m'
@@ -71,6 +72,12 @@ while [[ $# -gt 0 ]]; do
             BUILD_SHARED_LIBS="ON"
             shift
             ;;
+        --coverage)
+            ENABLE_COVERAGE="ON"
+            BUILD_TYPE="Debug"
+            BUILD_DIR="build-coverage"
+            shift
+            ;;
         --help)
             echo "Usage: $0 [options]"
             echo ""
@@ -83,6 +90,7 @@ while [[ $# -gt 0 ]]; do
             echo "  --with-modules     Enable C++23 modules (experimental)"
             echo "  --static           Build static libraries"
             echo "  --shared           Build shared libraries (default)"
+            echo "  --coverage         Build with code coverage instrumentation (Debug + build-coverage/)"
             echo "  --help             Show this help message"
             echo ""
             echo "Environment variables:"
@@ -140,12 +148,22 @@ print_info "  Tests: $BUILD_TESTING"
 print_info "  Benchmarks: $BUILD_BENCHMARKS"
 print_info "  Modules: $BUILD_WITH_MODULES"
 print_info "  Shared Libs: $BUILD_SHARED_LIBS"
+print_info "  Coverage: $ENABLE_COVERAGE"
 
-cmake --preset "$CONFIGURE_PRESET" -B "$BUILD_DIR" \
-    -DBUILD_TESTING="$BUILD_TESTING" \
-    -DBUILD_BENCHMARKS="$BUILD_BENCHMARKS" \
-    -DBUILD_WITH_MODULES="$BUILD_WITH_MODULES" \
-    -DBUILD_SHARED_LIBS="$BUILD_SHARED_LIBS"
+if [ "$ENABLE_COVERAGE" = "ON" ]; then
+    # Use coverage preset if coverage is enabled
+    cmake --preset coverage -B "$BUILD_DIR" \
+        -DBUILD_TESTING="$BUILD_TESTING" \
+        -DBUILD_BENCHMARKS="$BUILD_BENCHMARKS" \
+        -DBUILD_WITH_MODULES="$BUILD_WITH_MODULES" \
+        -DBUILD_SHARED_LIBS="$BUILD_SHARED_LIBS"
+else
+    cmake --preset "$CONFIGURE_PRESET" -B "$BUILD_DIR" \
+        -DBUILD_TESTING="$BUILD_TESTING" \
+        -DBUILD_BENCHMARKS="$BUILD_BENCHMARKS" \
+        -DBUILD_WITH_MODULES="$BUILD_WITH_MODULES" \
+        -DBUILD_SHARED_LIBS="$BUILD_SHARED_LIBS"
+fi
 
 # Build
 print_info "Building project with $PARALLEL_JOBS parallel jobs..."

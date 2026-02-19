@@ -1,0 +1,20 @@
+# CTest configuration for code coverage
+set(CTEST_COVERAGE_COMMAND "@GCOV_EXECUTABLE@")
+set(CTEST_COVERAGE_EXTRA_FLAGS "-l" "-p" "-b" "-a")
+
+# Configure coverage for source directories
+set(CTEST_EXTRA_COVERAGE_GLOB
+    "lib/src/*.cpp"
+    "lib/include/*.h"
+    "lib/include/*.hpp"
+)
+
+# Exclude patterns
+set(CTEST_COVERAGE_EXCLUDE
+    "${CMAKE_BINARY_DIR}/.*"
+    ".*/_deps/.*"
+    ".*/tests/.*"
+    "/usr/.*"
+    ".*\\.gcno"
+    ".*\\.gcda"
+)
