@@ -1,12 +1,14 @@
 # Add subdirectories for libraries
 add_subdirectory(lib)
 
-if(BUILD_TESTING)
+if(PROJECT_IS_TOP_LEVEL AND BUILD_TESTING)
 	add_subdirectory(tests)
 endif()
 
-if(BUILD_BENCHMARKS)
+if(PROJECT_IS_TOP_LEVEL AND BUILD_BENCHMARKS)
 	add_subdirectory(benchmarks)
 endif()
 
-add_subdirectory(examples)
+if(PROJECT_IS_TOP_LEVEL)
+	add_subdirectory(examples)
+endif()
