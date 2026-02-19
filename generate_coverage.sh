@@ -43,19 +43,12 @@ if ! command -v genhtml &> /dev/null; then
     exit 1
 fi
 
-# Capture coverage data
+# Capture coverage data (excluding system headers, dependencies, and tests)
 echo "Capturing coverage data..."
-lcov --capture --directory . --output-file coverage-raw.info --quiet
-
-# Remove coverage from external dependencies and tests
-echo "Filtering coverage data..."
-lcov --remove coverage-raw.info \
-    '*/_deps/**' \
-    '*/tests/**' \
-    '/usr/**' \
-    --output-file coverage.info \
-    --ignore-errors unused \
-    --quiet
+lcov --capture --directory . --output-file coverage.info --quiet \
+    --exclude '/usr/*' \
+    --exclude '*/_deps/*' \
+    --exclude '*/tests/*'
 
 # Generate HTML report
 echo "Generating HTML report..."
