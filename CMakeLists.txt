@@ -18,6 +18,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 option(BUILD_BENCHMARKS "Build benchmarks" ON)
 option(BUILD_WITH_MODULES "Build with C++23 modules" OFF)
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+option(ENABLE_COVERAGE "Enable code coverage" OFF)
 
 # Output directories - separate from source
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -47,6 +48,17 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_compile_options(-Wall -Wextra -pedantic)
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     add_compile_options(/W4 /permissive-)
+endif()
+
+# Coverage flags
+if(ENABLE_COVERAGE)
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+        add_compile_options(--coverage)
+        add_link_options(--coverage)
+        message(STATUS "Coverage enabled with --coverage flags")
+    else()
+        message(WARNING "Coverage is not supported with ${CMAKE_CXX_COMPILER_ID}")
+    endif()
 endif()
 
 # Apply module-specific compiler flags when enabled
@@ -102,6 +114,7 @@ message(STATUS "Build tests: ${BUILD_TESTING}")
 message(STATUS "Build benchmarks: ${BUILD_BENCHMARKS}")
 message(STATUS "Build with modules: ${BUILD_WITH_MODULES}")
 message(STATUS "Build shared libs: ${BUILD_SHARED_LIBS}")
+message(STATUS "Enable coverage: ${ENABLE_COVERAGE}")
 message(STATUS "Output directory: ${CMAKE_BINARY_DIR}")
 message(STATUS "================================")
 message(STATUS "")

@@ -42,16 +42,22 @@
 
 # Build directories
 build/
+build-coverage/
 out/
 cmake-build-*/
 
-# CMake files
-CMakeCache.txt
+# CMake build artifacts
 CMakeFiles/
+CMakeCache.txt
 cmake_install.cmake
 Makefile
 *.cmake
 compile_commands.json
+!CMakeLists.txt
+
+# CodeQL build artifacts
+_codeql_build_dir/
+_codeql_detected_source_root
 
 # IDE files
 .vscode/
