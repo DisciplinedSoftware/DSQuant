@@ -13,7 +13,7 @@ set -e  # Exit on error
 BUILD_TYPE="${BUILD_TYPE:-Release}"
 BUILD_DIR="${BUILD_DIR:-build}"
 PARALLEL_JOBS="${PARALLEL_JOBS:-$(nproc 2>/dev/null || echo 1)}"
-BUILD_TESTS="${BUILD_TESTS:-ON}"
+BUILD_TESTING="${BUILD_TESTING:-${BUILD_TESTS:-ON}}"
 BUILD_BENCHMARKS="${BUILD_BENCHMARKS:-ON}"
 BUILD_WITH_MODULES="${BUILD_WITH_MODULES:-OFF}"
 BUILD_SHARED_LIBS="${BUILD_SHARED_LIBS:-ON}"
@@ -52,7 +52,7 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         --no-tests)
-            BUILD_TESTS="OFF"
+            BUILD_TESTING="OFF"
             shift
             ;;
         --no-benchmarks)
@@ -89,6 +89,7 @@ while [[ $# -gt 0 ]]; do
             echo "  BUILD_TYPE         Build type (Debug/Release)"
             echo "  BUILD_DIR          Build directory (default: build)"
             echo "  PARALLEL_JOBS      Number of parallel jobs (default: $(nproc))"
+            echo "  BUILD_TESTING      Build tests (ON/OFF, default: ON)"
             echo "  BUILD_SHARED_LIBS  Build shared libs (ON/OFF, default: ON)"
             exit 0
             ;;
@@ -121,7 +122,7 @@ fi
 print_info "Configuring project..."
 print_info "  Build Type: $BUILD_TYPE"
 print_info "  Build Directory: $BUILD_DIR"
-print_info "  Tests: $BUILD_TESTS"
+print_info "  Tests: $BUILD_TESTING"
 print_info "  Benchmarks: $BUILD_BENCHMARKS"
 print_info "  Modules: $BUILD_WITH_MODULES"
 print_info "  Shared Libs: $BUILD_SHARED_LIBS"
@@ -132,7 +133,7 @@ cmake -B "$BUILD_DIR" \
     -DCMAKE_POLICY_DEFAULT_CMP0175=OLD \
     -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
     -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
-    -DBUILD_TESTS="$BUILD_TESTS" \
+    -DBUILD_TESTING="$BUILD_TESTING" \
     -DBUILD_BENCHMARKS="$BUILD_BENCHMARKS" \
     -DBUILD_WITH_MODULES="$BUILD_WITH_MODULES" \
     -DBUILD_SHARED_LIBS="$BUILD_SHARED_LIBS"
@@ -142,7 +143,7 @@ print_info "Building project with $PARALLEL_JOBS parallel jobs..."
 cmake --build "$BUILD_DIR" -j "$PARALLEL_JOBS"
 
 # Run tests if built
-if [ "$BUILD_TESTS" = "ON" ]; then
+if [ "$BUILD_TESTING" = "ON" ]; then
     print_info "Running tests..."
     (cd "$BUILD_DIR" && ctest --output-on-failure)
     print_info "Tests completed successfully!"

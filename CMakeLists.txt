@@ -45,7 +45,6 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 endif()
 
 # Options
-option(BUILD_TESTS "Build tests" ON)
 option(BUILD_BENCHMARKS "Build benchmarks" ON)
 option(BUILD_WITH_MODULES "Build with C++23 modules" OFF)
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
@@ -75,24 +74,8 @@ endif()
 # Include CMake modules directory
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-# Dependencies
-include(FetchContent)
-
-# boost.ut - header-only testing framework
-FetchContent_Declare(
-    ut
-    GIT_REPOSITORY https://github.com/boost-ext/ut.git
-    GIT_TAG v2.1.0
-)
-
-if(BUILD_TESTS)
-    FetchContent_MakeAvailable(ut)
-endif()
-
-# Enable testing
-if(BUILD_TESTS)
-    enable_testing()
-endif()
+# Enable testing via CTest (defines BUILD_TESTING)
+include(CTest)
 
 # Add subdirectories
 add_subdirectory(src)
@@ -103,7 +86,7 @@ message(STATUS "===== DSQuant Configuration =====")
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "C++ compiler: ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
 message(STATUS "C++ standard: C++${CMAKE_CXX_STANDARD}")
-message(STATUS "Build tests: ${BUILD_TESTS}")
+message(STATUS "Build tests: ${BUILD_TESTING}")
 message(STATUS "Build benchmarks: ${BUILD_BENCHMARKS}")
 message(STATUS "Build with modules: ${BUILD_WITH_MODULES}")
 message(STATUS "Build shared libs: ${BUILD_SHARED_LIBS}")
