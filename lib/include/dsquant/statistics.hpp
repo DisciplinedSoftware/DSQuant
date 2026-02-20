@@ -11,9 +11,10 @@ namespace dsquant {
 /// @param begin Start iterator
 /// @param end End iterator
 /// @return The arithmetic mean
-template<std::floating_point T>
+template <std::floating_point T>
 constexpr T mean(const T* begin, const T* end) noexcept {
-    if (begin == end) return T{0};
+    if (begin == end)
+        return T{0};
 
     T sum = T{0};
     std::size_t count = 0;
@@ -32,9 +33,10 @@ constexpr T mean(const T* begin, const T* end) noexcept {
 /// @param end End iterator
 /// @return The sample variance
 /// @note Uses two-pass algorithm for better performance
-template<std::floating_point T>
+template <std::floating_point T>
 constexpr T variance(const T* begin, const T* end) noexcept {
-    if (begin == end) return T{0};
+    if (begin == end)
+        return T{0};
 
     // First pass: calculate mean
     const T avg = mean(begin, end);
@@ -57,12 +59,13 @@ constexpr T variance(const T* begin, const T* end) noexcept {
 /// @param begin Start iterator
 /// @param end End iterator
 /// @return The sample standard deviation
-template<std::floating_point T>
+template <std::floating_point T>
 constexpr T standard_deviation(const T* begin, const T* end) noexcept {
     return std::sqrt(variance(begin, end));
 }
 
-// TODO: To remove once there is at least one linker dependency is included on the library. This is just to ensure that the library is linked correctly.
+// TODO: To remove once there is at least one linker dependency is included on the library. This is
+// just to ensure that the library is linked correctly.
 void foo();
 
-} // namespace dsquant
+}  // namespace dsquant
