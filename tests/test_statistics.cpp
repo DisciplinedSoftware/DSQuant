@@ -5,7 +5,7 @@
 using namespace boost::ut;
 using namespace dsquant;
 
-suite<"statistics suite"> statistics_suite = [] {
+suite<"Statistics Suite"> statistics_suite = [] {
     "mean calculation"_test = [] {
         std::array<double, 5> data = {1.0, 2.0, 3.0, 4.0, 5.0};
         const double result = mean(data.data(), data.data() + data.size());
