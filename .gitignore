@@ -52,7 +52,6 @@ CMakeCache.txt
 cmake_install.cmake
 Makefile
 *.cmake
-compile_commands.json
 !CMakeLists.txt
 
 # CodeQL build artifacts
