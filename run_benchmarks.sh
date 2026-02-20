@@ -350,45 +350,45 @@ NO_PERF_MODE=0
 ALLOW_TURBO=0
 declare -a BENCHMARKS_TO_RUN
 
+# Default to running all benchmarks if no arguments provided
 if [[ $# -eq 0 ]]; then
-    usage
-    exit 1
+    RUN_ALL=1
+else
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --help|-h)
+                usage
+                exit 0
+                ;;
+            --list|-l)
+                get_available_benchmarks
+                list_benchmarks
+                exit 0
+                ;;
+            --all)
+                RUN_ALL=1
+                shift
+                ;;
+            --no-perf-mode)
+                NO_PERF_MODE=1
+                shift
+                ;;
+            --allow-turbo)
+                ALLOW_TURBO=1
+                shift
+                ;;
+            -*)
+                print_error "Unknown option: $1"
+                usage
+                exit 1
+                ;;
+            *)
+                BENCHMARKS_TO_RUN+=("$1")
+                shift
+                ;;
+        esac
+    done
 fi
-
-while [[ $# -gt 0 ]]; do
-    case $1 in
-        --help|-h)
-            usage
-            exit 0
-            ;;
-        --list|-l)
-            get_available_benchmarks
-            list_benchmarks
-            exit 0
-            ;;
-        --all)
-            RUN_ALL=1
-            shift
-            ;;
-        --no-perf-mode)
-            NO_PERF_MODE=1
-            shift
-            ;;
-        --allow-turbo)
-            ALLOW_TURBO=1
-            shift
-            ;;
-        -*)
-            print_error "Unknown option: $1"
-            usage
-            exit 1
-            ;;
-        *)
-            BENCHMARKS_TO_RUN+=("$1")
-            shift
-            ;;
-    esac
-done
 
 # Get available benchmarks
 get_available_benchmarks
