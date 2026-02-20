@@ -90,7 +90,9 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(CTest)
 
 # Setup code coverage if enabled
-include(CodeCoverage)
+if(ENABLE_COVERAGE)
+    include(CodeCoverage)
+endif()
 
 # Add subdirectories
 add_subdirectory(lib)
