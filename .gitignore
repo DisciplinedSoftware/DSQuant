@@ -64,6 +64,7 @@ _codeql_detected_source_root
 *.swp
 *.swo
 *~
+compile_commands.json
 
 # Dependencies
 external/
