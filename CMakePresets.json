@@ -7,6 +7,17 @@
   },
   "configurePresets": [
     {
+      "name": "default",
+      "displayName": "Default (Release)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_POLICY_DEFAULT_CMP0175": "OLD",
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
       "name": "debug",
       "displayName": "Debug",
       "generator": "Ninja",
@@ -43,6 +54,10 @@
   ],
   "buildPresets": [
     {
+      "name": "default",
+      "configurePreset": "default"
+    },
+    {
       "name": "debug",
       "configurePreset": "debug"
     },
@@ -52,6 +67,13 @@
     }
   ],
   "testPresets": [
+    {
+      "name": "default",
+      "configurePreset": "default",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
     {
       "name": "debug",
       "configurePreset": "debug",
