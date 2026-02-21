@@ -12,7 +12,7 @@ namespace dsquant {
 /// @param end End iterator
 /// @return The arithmetic mean
 template <std::floating_point T>
-constexpr T mean(const T* begin, const T* end) noexcept {
+constexpr T mean(T const* begin, T const* end) noexcept {
     if (begin == end)
         return T{0};
 
@@ -34,19 +34,19 @@ constexpr T mean(const T* begin, const T* end) noexcept {
 /// @return The sample variance
 /// @note Uses two-pass algorithm for better performance
 template <std::floating_point T>
-constexpr T variance(const T* begin, const T* end) noexcept {
+constexpr T variance(T const* begin, T const* end) noexcept {
     if (begin == end)
         return T{0};
 
     // First pass: calculate mean
-    const T avg = mean(begin, end);
+    T const avg = mean(begin, end);
 
     // Second pass: calculate sum of squared differences
     T sum_sq_diff = T{0};
     std::size_t count = 0;
 
     for (auto it = begin; it != end; ++it) {
-        const T diff = *it - avg;
+        T const diff = *it - avg;
         sum_sq_diff += diff * diff;
         ++count;
     }
@@ -60,7 +60,7 @@ constexpr T variance(const T* begin, const T* end) noexcept {
 /// @param end End iterator
 /// @return The sample standard deviation
 template <std::floating_point T>
-constexpr T standard_deviation(const T* begin, const T* end) noexcept {
+constexpr T standard_deviation(T const* begin, T const* end) noexcept {
     return std::sqrt(variance(begin, end));
 }
 

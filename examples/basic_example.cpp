@@ -19,9 +19,9 @@ int main() {
                   << "\n";
     }
 
-    const double avg = mean(returns.data(), returns.data() + returns.size());
-    const double var = variance(returns.data(), returns.data() + returns.size());
-    const double stddev = standard_deviation(returns.data(), returns.data() + returns.size());
+    double const avg = mean(returns.data(), returns.data() + returns.size());
+    double const var = variance(returns.data(), returns.data() + returns.size());
+    double const stddev = standard_deviation(returns.data(), returns.data() + returns.size());
 
     std::cout << "\nStatistical measures:\n";
     std::cout << "  Mean:               " << std::fixed << std::setprecision(6) << avg << "\n";
@@ -29,8 +29,8 @@ int main() {
     std::cout << "  Standard Deviation: " << std::fixed << std::setprecision(6) << stddev << "\n";
 
     // Annualized statistics (assuming 252 trading days)
-    const double annualized_return = avg * 252;
-    const double annualized_volatility = stddev * std::sqrt(252.0);
+    double const annualized_return = avg * 252;
+    double const annualized_volatility = stddev * std::sqrt(252.0);
 
     std::cout << "\nAnnualized statistics (252 trading days):\n";
     std::cout << "  Expected Return:    " << std::fixed << std::setprecision(2)
