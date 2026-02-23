@@ -53,6 +53,7 @@ cmake_install.cmake
 Makefile
 *.cmake
 !CMakeLists.txt
+!cmake/*.cmake
 
 # CodeQL build artifacts
 _codeql_build_dir/
