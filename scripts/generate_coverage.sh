@@ -3,10 +3,6 @@
 
 set -e
 
-BUILD_DIR="${1:-build-coverage}"
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd "$SCRIPT_DIR" && pwd)"
-
 # Ensure we're in the project root or use specified build directory
 if [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
     echo "Usage: $(basename "$0") [build_directory]"
@@ -19,6 +15,12 @@ if [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
     echo "  $(basename "$0") build-coverage"
     exit 0
 fi
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$PROJECT_ROOT"
+
+BUILD_DIR="${1:-build-coverage}"
 
 if [ ! -d "$BUILD_DIR" ]; then
     echo "Error: Build directory not found: $BUILD_DIR"

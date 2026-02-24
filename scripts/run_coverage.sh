@@ -4,9 +4,10 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$PROJECT_ROOT"
 
 echo "Building DSQuant with code coverage instrumentation..."
-cd "$SCRIPT_DIR"
 "$SCRIPT_DIR/build.sh" --coverage
 
 echo ""
@@ -21,11 +22,11 @@ echo ""
 
 # Detect OS and open report
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    xdg-open "$SCRIPT_DIR/build-coverage/html/index.html" &>/dev/null || echo "Report available at: file://$SCRIPT_DIR/build-coverage/html/index.html"
+    xdg-open "$PROJECT_ROOT/build-coverage/html/index.html" &>/dev/null || echo "Report available at: file://$PROJECT_ROOT/build-coverage/html/index.html"
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-    open "$SCRIPT_DIR/build-coverage/html/index.html" &>/dev/null || echo "Report available at: file://$SCRIPT_DIR/build-coverage/html/index.html"
+    open "$PROJECT_ROOT/build-coverage/html/index.html" &>/dev/null || echo "Report available at: file://$PROJECT_ROOT/build-coverage/html/index.html"
 elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
-    start "$SCRIPT_DIR\\build-coverage\\html\\index.html" &>/dev/null || echo "Report available at: file://$SCRIPT_DIR/build-coverage/html/index.html"
+    start "$PROJECT_ROOT\\build-coverage\\html\\index.html" &>/dev/null || echo "Report available at: file://$PROJECT_ROOT/build-coverage/html/index.html"
 else
-    echo "Report available at: file://$SCRIPT_DIR/build-coverage/html/index.html"
+    echo "Report available at: file://$PROJECT_ROOT/build-coverage/html/index.html"
 fi
