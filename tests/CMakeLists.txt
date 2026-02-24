@@ -18,6 +18,9 @@ endif()
 add_executable(tests_dsquant test_statistics.cpp main.cpp)
 target_link_libraries(tests_dsquant PRIVATE dsquant Boost::ut)
 target_compile_definitions(tests_dsquant PRIVATE BOOST_UT_DISABLE_MODULE)
+target_include_directories(tests_dsquant PRIVATE
+    "${CMAKE_SOURCE_DIR}/lib/include"
+)
 
 # Register test with CTest
 add_test(NAME tests_dsquant COMMAND tests_dsquant)
