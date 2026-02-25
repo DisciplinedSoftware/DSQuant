@@ -1,5 +1,22 @@
 #!/bin/bash
 
+SCRIPT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+
+# If .clang-format is staged, offer to reformat the whole project
+if git diff --cached --name-only | grep -qx '\.clang-format'; then
+    if [ -t 0 ]; then
+        read -r -p ".clang-format changed — reformat entire project? [y/N] " answer
+        if [[ "$answer" =~ ^[Yy]$ ]]; then
+            echo "Reformatting entire project..."
+            bash "$SCRIPT_DIR/scripts/format.sh"
+            git add -u
+            echo "Reformatting complete."
+        fi
+    else
+        echo "Note: .clang-format changed. Run ./scripts/format.sh to reformat the project."
+    fi
+fi
+
 STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.(cpp|hpp|h|cc)$')
 
 if [ -z "$STAGED_FILES" ]; then
