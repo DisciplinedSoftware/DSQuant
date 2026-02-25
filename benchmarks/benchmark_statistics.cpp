@@ -25,34 +25,28 @@ int main() {
 
     // Benchmark mean calculation
     ankerl::nanobench::Bench().run("mean (100 elements)", [&] {
-        ankerl::nanobench::doNotOptimizeAway(
-            mean(small_data.data(), small_data.data() + small_data.size()));
+        ankerl::nanobench::doNotOptimizeAway(mean(small_data.data(), small_data.data() + small_data.size()));
     });
 
     ankerl::nanobench::Bench().run("mean (1000 elements)", [&] {
-        ankerl::nanobench::doNotOptimizeAway(
-            mean(medium_data.data(), medium_data.data() + medium_data.size()));
+        ankerl::nanobench::doNotOptimizeAway(mean(medium_data.data(), medium_data.data() + medium_data.size()));
     });
 
     ankerl::nanobench::Bench().run("mean (10000 elements)", [&] {
-        ankerl::nanobench::doNotOptimizeAway(
-            mean(large_data.data(), large_data.data() + large_data.size()));
+        ankerl::nanobench::doNotOptimizeAway(mean(large_data.data(), large_data.data() + large_data.size()));
     });
 
     // Benchmark variance calculation
     ankerl::nanobench::Bench().run("variance (100 elements)", [&] {
-        ankerl::nanobench::doNotOptimizeAway(
-            variance(small_data.data(), small_data.data() + small_data.size()));
+        ankerl::nanobench::doNotOptimizeAway(variance(small_data.data(), small_data.data() + small_data.size()));
     });
 
     ankerl::nanobench::Bench().run("variance (1000 elements)", [&] {
-        ankerl::nanobench::doNotOptimizeAway(
-            variance(medium_data.data(), medium_data.data() + medium_data.size()));
+        ankerl::nanobench::doNotOptimizeAway(variance(medium_data.data(), medium_data.data() + medium_data.size()));
     });
 
     ankerl::nanobench::Bench().run("variance (10000 elements)", [&] {
-        ankerl::nanobench::doNotOptimizeAway(
-            variance(large_data.data(), large_data.data() + large_data.size()));
+        ankerl::nanobench::doNotOptimizeAway(variance(large_data.data(), large_data.data() + large_data.size()));
     });
 
     // Benchmark standard deviation calculation

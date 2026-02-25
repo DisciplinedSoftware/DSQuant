@@ -29,8 +29,7 @@ suite<"Statistics Suite"> statistics_suite = [] {
         std::array<double, 5> data = {1.0, 2.0, 3.0, 4.0, 5.0};
         double const result = standard_deviation(data.data(), data.data() + data.size());
         // Standard deviation of {1,2,3,4,5} is sqrt(2.5) ≈ 1.5811
-        expect(that % std::abs(result - 1.5811) < 0.001)
-            << "standard deviation should be approximately 1.5811";
+        expect(that % std::abs(result - 1.5811) < 0.001) << "standard deviation should be approximately 1.5811";
     };
 
     "mean with single element"_test = [] {
