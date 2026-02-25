@@ -1,0 +1,13 @@
+#!/bin/bash
+
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.(cpp|hpp|h|cc)$')
+
+if [ -z "$STAGED_FILES" ]; then
+    exit 0
+fi
+
+echo "Running clang-format on staged files..."
+echo "$STAGED_FILES" | xargs clang-format -i
+echo "$STAGED_FILES" | xargs git add
+
+echo "clang-format completed."

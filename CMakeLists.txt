@@ -9,6 +9,14 @@ project(DSQuant
 
 include(GNUInstallDirs)
 
+# Configure git hooks at cmake configure time
+if(EXISTS "${CMAKE_SOURCE_DIR}/.githooks")
+    execute_process(
+        COMMAND git config core.hooksPath .githooks
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    )
+endif()
+
 # C++23 standard
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
