@@ -12,7 +12,7 @@ echo "Building DSQuant with code coverage instrumentation..."
 
 echo ""
 echo "Generating coverage report..."
-"$SCRIPT_DIR/generate_coverage.sh" .build-coverage
+"$SCRIPT_DIR/generate_coverage.sh" build-coverage
 
 echo ""
 echo "✓ Coverage workflow completed successfully!"
@@ -22,11 +22,11 @@ echo ""
 
 # Detect OS and open report
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    xdg-open "$PROJECT_ROOT/.build-coverage/html/index.html" &>/dev/null || echo "Report available at: file://$PROJECT_ROOT/.build-coverage/html/index.html"
+    xdg-open "$PROJECT_ROOT/build-coverage/html/index.html" &>/dev/null || echo "Report available at: file://$PROJECT_ROOT/build-coverage/html/index.html"
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-    open "$PROJECT_ROOT/.build-coverage/html/index.html" &>/dev/null || echo "Report available at: file://$PROJECT_ROOT/.build-coverage/html/index.html"
+    open "$PROJECT_ROOT/build-coverage/html/index.html" &>/dev/null || echo "Report available at: file://$PROJECT_ROOT/build-coverage/html/index.html"
 elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
-    start "$PROJECT_ROOT\\.build-coverage\\html\\index.html" &>/dev/null || echo "Report available at: file://$PROJECT_ROOT/.build-coverage/html/index.html"
+    start "$PROJECT_ROOT\\build-coverage\\html\\index.html" &>/dev/null || echo "Report available at: file://$PROJECT_ROOT/build-coverage/html/index.html"
 else
-    echo "Report available at: file://$PROJECT_ROOT/.build-coverage/html/index.html"
+    echo "Report available at: file://$PROJECT_ROOT/build-coverage/html/index.html"
 fi

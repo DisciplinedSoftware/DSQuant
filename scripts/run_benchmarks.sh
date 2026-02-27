@@ -46,7 +46,7 @@ ORIGINAL_BOOST=""
 CPU_FREQ_LOCKED=0
 declare -A ORIGINAL_MIN_FREQS
 
-# Available benchmarks (executables starting with "benchmark_" in .build/bin)
+# Available benchmarks (executables starting with "benchmark_" in build/bin)
 declare -a AVAILABLE_BENCHMARKS
 
 # Function to get available benchmarks
